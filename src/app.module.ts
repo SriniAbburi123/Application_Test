@@ -3,9 +3,10 @@ import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import * as crypto from 'crypto';
 import { MongooseModule } from '@nestjs/mongoose';
-import { EmployeeSkillModule } from './modules/employeeSkill.module';
-import { EmployeeAnalyticsModule } from './modules/employeeAnalytics.module';
-import { EmployeeSkillController } from './controllers/employeeSkill.controller';
+import { EmployeeModule } from './modules/employee/employee.module';
+import { EmployeeAnalyticsModule } from './modules//employee/employeeAnalytics.module';
+import { SkillModule } from './modules/skill/skill.module';
+import { EmployeeController } from './modules/employee/employee.controller';
 import { LoggerMiddleware } from './utils/loggerModule/logger.middleware';
 import { EmployeeSchema } from './models/schemas/EmployeeSchema';
 import { SkillSchema } from './models/schemas/SkillSchema';
@@ -25,8 +26,10 @@ function decrypt(text: string): string {
   console.log(decrypted.toString(),"====================decrypted string");
   return decrypted.toString().trim();
 }
+
 @Module({imports: [
-  EmployeeSkillModule,
+  EmployeeModule,
+  SkillModule,
   EmployeeAnalyticsModule,
   MongooseModule.forRoot('mongodb://localhost:27017',{
   dbName: 'employeedb'}),
@@ -35,7 +38,7 @@ function decrypt(text: string): string {
     { name: 'Skill', schema: SkillSchema }
   ])
 ],
-  controllers: [EmployeeSkillController],
+  controllers: [EmployeeController],
   providers: [
   {
     provide: APP_GUARD,

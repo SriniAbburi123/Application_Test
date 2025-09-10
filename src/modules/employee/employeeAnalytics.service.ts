@@ -1,8 +1,8 @@
 import { Injectable, Logger,PipeTransform, NotFoundException, InternalServerErrorException, BadRequestException, ConflictException, Get } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { Employee } from '../models/schemas/EmployeeSchema';
-import { UpdateEmployeeDto } from '../models/dtos/createEmployee.dto';
+import { Employee } from '../../models/schemas/EmployeeSchema';
+import { UpdateEmployeeDto } from '../../models/dtos/createEmployee.dto';
  
 @Injectable()
 export class EmployeeAnalyticsService {

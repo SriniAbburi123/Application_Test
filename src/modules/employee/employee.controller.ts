@@ -1,24 +1,22 @@
 import { Body, Controller, Logger, Delete, Get, Query, HttpStatus, Param, Post, Put, Res } from '@nestjs/common';
-import { Injectable, PipeTransform, NotFoundException, BadRequestException } from '@nestjs/common';
-import { Roles } from '../auth/decorators/roles.decorator';
-import { Role } from '../models/enums/roles.enum';
+import { Roles } from '../../auth/decorators/roles.decorator';
+import { Role } from '../../models/enums/roles.enum';
 import { isValidObjectId } from 'mongoose';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { EmployeeSkillService } from '../services/employeeSkill.service';
-import { CreateEmployeeDto, UpdateEmployeeDto } from '../models/dtos/createEmployee.dto';
-import { CreateSkillDto, UpdateSkillDto } from '../models/dtos/createSkill.dto';
+import { EmployeeService } from './employee.service';
+import { CreateEmployeeDto, UpdateEmployeeDto } from '../../models/dtos/createEmployee.dto';
 import { 
   GetMatchedEmployeeSkillsResponse
- } from '../models/dtos/get-matched-employee-skills-response.dto';
-import { PostMatchedEmployeeDto } from '../models/dtos/post-matched-employee.dto';
-import {GetMatchedEmployeeAllSkillsResponse}  from '../models/dtos/get-matched-employee-skills-response.dto';
+ } from '../../models/dtos/get-matched-employee-skills-response.dto';
+import { PostMatchedEmployeeDto } from '../../models/dtos/post-matched-employee.dto';
+import {GetMatchedEmployeeAllSkillsResponse}  from '../../models/dtos/get-matched-employee-skills-response.dto';
 import { AddSkillsEmployeeDto } from 'src/models/dtos/addSkillToEmployee.dto';
 
 @ApiTags('Application')
 @Controller('Application')
-export class EmployeeSkillController {
-  private readonly logger = new Logger(EmployeeSkillController.name);
-  constructor(private readonly employeeSkillService: EmployeeSkillService) { }
+export class EmployeeController {
+  private readonly logger = new Logger(EmployeeController.name);
+  constructor(private readonly employeeService: EmployeeService) { }
   @Post('createEmployee')
   @Roles(Role.Admin)
   @ApiOperation({
@@ -35,7 +33,7 @@ export class EmployeeSkillController {
   })
   async createEmployee(@Res() response, @Body() createEmployeeDto: CreateEmployeeDto) {
     try {
-      const newEmployee = await this.employeeSkillService.createEmployee(createEmployeeDto);
+      const newEmployee = await this.employeeService.createEmployee(createEmployeeDto);
       // console.log(" Returned from the service method", newEmployee);
       return response.status(HttpStatus.CREATED).json({
         message: 'Employee has been added successfully',
@@ -46,36 +44,6 @@ export class EmployeeSkillController {
       message: 'Error: Employee not Created!',
       error: 'Bad Request'
       });
-    }
-  }
-
-  @Post('createSkill')
-  @Roles(Role.Admin)
-  @ApiOperation({
-    summary: 'Add Skill in the database',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Skill added successfully',
-    type: CreateEmployeeDto,
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'Failed to add the skill',
-  })
-  async createSkill(@Res() response, @Body() createSkillDto: CreateSkillDto) {
-    try {
-      const newSkill = await this.employeeSkillService.createSkill(createSkillDto);
-      // console.log(" Returned from the service method", newEmployee);
-      return response.status(HttpStatus.CREATED).json({
-        message: 'Skill has been added successfully',
-        newSkill});
-    } catch (err) {
-        return response.status(HttpStatus.BAD_REQUEST).json({
-        statusCode: 400,
-        message: 'Error: Skill not Created!',
-        error: 'Bad Request'
-        });
     }
   }
 
@@ -95,7 +63,7 @@ export class EmployeeSkillController {
   })
   async addSkillsToEmployee(@Res() response, @Body() addSkillsEmployeeDto:AddSkillsEmployeeDto) {
     try {
-      const newEmployee = await this.employeeSkillService.addSkillsToEmployee(addSkillsEmployeeDto);
+      const newEmployee = await this.employeeService.addSkillsToEmployee(addSkillsEmployeeDto);
       // console.log(" Returned from the service method", newEmployee);
       return response.status(HttpStatus.CREATED).json({
         message: 'Employee has been added successfully',
@@ -125,7 +93,7 @@ export class EmployeeSkillController {
   })
   async updateEmployee(@Res() response,@Param('EmployeeName') EmployeeName: string, @Body() updateEmployeeDto: UpdateEmployeeDto) {
     try {
-      const existingEmployee = await this.employeeSkillService.updateEmployee(EmployeeName, updateEmployeeDto);
+      const existingEmployee = await this.employeeService.updateEmployee(EmployeeName, updateEmployeeDto);
       return response.status(HttpStatus.OK).json({
       message: 'Employee has been successfully updated',
       existingEmployee,});
@@ -133,35 +101,6 @@ export class EmployeeSkillController {
       return response.status(HttpStatus.BAD_REQUEST).json({
       statusCode: 400,
       message: 'Error: Employee Not Updated!',
-      error: 'Bad Request'
-      });
-    }
-  }
-
-  @Put(':SkillName')
-  @Roles(Role.Admin)
-  @ApiOperation({
-    summary: 'Update the specified skill record)',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Skill updated successfully',
-    type: UpdateEmployeeDto,
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'Failed to update the skill',
-  })
-  async updateSkill(@Res() response, @Param('SkillName') skillName: string, @Body() updateSkillDto: UpdateSkillDto) {
-    try {
-      const existingSkill = await this.employeeSkillService.updateEmployee(skillName, UpdateSkillDto);
-      return response.status(HttpStatus.OK).json({
-      message: 'Employee has been successfully updated',
-      existingSkill,});
-    } catch (err) {
-      return response.status(HttpStatus.BAD_REQUEST).json({
-      statusCode: 400,
-      message: 'Error: Skill Not Updated!',
       error: 'Bad Request'
       });
     }
@@ -183,7 +122,7 @@ export class EmployeeSkillController {
   })
   async updateScore(@Res() response, updateEmployeeDto:UpdateEmployeeDto) {
     try {
-      const existingSkill = await this.employeeSkillService.updateScore(updateEmployeeDto);
+      const existingSkill = await this.employeeService.updateScore(updateEmployeeDto);
       return response.status(HttpStatus.OK).json({
       message: 'Employee has been successfully updated',
       existingSkill,});
@@ -212,7 +151,7 @@ export class EmployeeSkillController {
   async getAllSkilledEmployees( @Res() response) {
     try {
       // console.log('In the controller method: getAllSkilledEmployees.name');
-      const data: GetMatchedEmployeeAllSkillsResponse[] = await this.employeeSkillService.getAllSkilledEmployees();
+      const data: GetMatchedEmployeeAllSkillsResponse[] = await this.employeeService.getAllSkilledEmployees();
       return response.status(HttpStatus.OK).json({data});
     } catch (err) {
       return response.status(HttpStatus.OK).json(err);
@@ -236,7 +175,7 @@ export class EmployeeSkillController {
     try {
       // console.log('In the controller method: getMatchedEmployees.name');
       // console.log('In the controller method: getMatchedEmployees.name : empSkill:', empSkill);
-      const data: GetMatchedEmployeeSkillsResponse = await this.employeeSkillService.getSkilledEmployees(postMatchEmployeeDto);
+      const data: GetMatchedEmployeeSkillsResponse = await this.employeeService.getSkilledEmployees(postMatchEmployeeDto);
       return response.status(HttpStatus.OK).json({data});
     } catch (err) {
       return response.status(err).json(err);
@@ -260,7 +199,7 @@ export class EmployeeSkillController {
     try {
       // console.log('In the controller method: getMatchedEmployees.name');
       // console.log('In the controller method: getMatchedEmployees.name : empSkill:', empSkill);
-      const data: GetMatchedEmployeeSkillsResponse = await this.employeeSkillService.getMatchedEmployees(empSkill);
+      const data: GetMatchedEmployeeSkillsResponse = await this.employeeService.getMatchedEmployees(empSkill);
       return response.status(HttpStatus.OK).json({data});
     } catch (err) {
     return response.status(err).json(err);
@@ -281,7 +220,7 @@ export class EmployeeSkillController {
   })
   async getEmployeeOfSkills(@Query('skill') skill:string,  @Res() response) {
     try {
-      const data = await this.employeeSkillService.getEmployeesOfSkill(skill);
+      const data = await this.employeeService.getEmployeesOfSkill(skill);
       return response.status(HttpStatus.OK).json({data});
     } catch (err) {
     return response.status(err).json(err);
@@ -302,7 +241,7 @@ export class EmployeeSkillController {
   })
   async getEmployees(@Res() response) {
     try {
-      const EmployeeData = await this.employeeSkillService.getAllEmployees();
+      const EmployeeData = await this.employeeService.getAllEmployees();
       return response.status(HttpStatus.OK).json({
       message: 'All Employees data found successfully',EmployeeData});
     } catch (err) {
@@ -324,7 +263,7 @@ export class EmployeeSkillController {
   })
   async getEmployee(@Res() response, @Param('EmployeeName') EmployeeName: string) {
     try {
-      const existingEmployee = await this.employeeSkillService.getEmployee(EmployeeName);
+      const existingEmployee = await this.employeeService.getEmployee(EmployeeName);
       console.log('Existing employee:', existingEmployee);
       return response.status(HttpStatus.OK).json({
       message: 'Employee found successfully',existingEmployee,});
@@ -348,31 +287,7 @@ export class EmployeeSkillController {
   })
   async deleteEmployee(@Res() response, @Param('EmployeeName') EmployeeName: string){
     try {
-      const deletedEmployee = await this.employeeSkillService.deleteEmployee(EmployeeName);
-      return response.status(HttpStatus.OK).json({
-      message: 'Employee deleted successfully',
-      deletedEmployee,});
-    }catch (err) {
-      return response.status(err).json(err);
-    }
-  }
-
-  @Delete(':skill')
-  @Roles(Role.Admin)
-  @ApiOperation({
-    summary: 'Delete specified Skill record',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Skill data deleted successfully',
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'Skill not found',
-  })
-  async deleteSkill(@Res() response, @Param('Skill') skill: string){
-    try {
-      const deletedEmployee = await this.employeeSkillService.deleteSkill(skill);
+      const deletedEmployee = await this.employeeService.deleteEmployee(EmployeeName);
       return response.status(HttpStatus.OK).json({
       message: 'Employee deleted successfully',
       deletedEmployee,});
@@ -381,4 +296,3 @@ export class EmployeeSkillController {
     }
   }
 }
-

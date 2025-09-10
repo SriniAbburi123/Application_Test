@@ -2,21 +2,20 @@ import { Injectable, Logger,PipeTransform, NotFoundException, InternalServerErro
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { EmployeeAnalyticsService } from './employeeAnalytics.service';
-import { Employee } from '../models/schemas/EmployeeSchema';
-import { Skill } from '../models/schemas/SkillSchema';
-import { CreateEmployeeDto, UpdateEmployeeDto } from '../models/dtos/createEmployee.dto';
-import { CreateSkillDto, UpdateSkillDto } from '../models/dtos/createSkill.dto';
-import {GetMatchedEmployeeAllSkillsResponse}  from '../models/dtos/get-matched-employee-skills-response.dto';
+import { Employee } from '../../models/schemas/EmployeeSchema';
+import { Skill } from '../../models/schemas/SkillSchema';
+import { CreateEmployeeDto, UpdateEmployeeDto } from '../../models/dtos/createEmployee.dto';
+import {GetMatchedEmployeeAllSkillsResponse}  from '../../models/dtos/get-matched-employee-skills-response.dto';
 import { 
   GetMatchedEmployeeSkillsResponseDto,
   GetMatchedEmployeeSkillsResponse
- } from '../models/dtos/get-matched-employee-skills-response.dto';
-import { PostMatchedEmployeeDto } from '../models/dtos/post-matched-employee.dto';
-import { AddSkillsEmployeeDto } from '../models/dtos/addSkillToEmployee.dto';
+ } from '../../models/dtos/get-matched-employee-skills-response.dto';
+import { PostMatchedEmployeeDto } from '../../models/dtos/post-matched-employee.dto';
+import { AddSkillsEmployeeDto } from '../../models/dtos/addSkillToEmployee.dto';
 
 @Injectable()
-export class EmployeeSkillService {
-  private readonly logger = new Logger(EmployeeSkillService.name);
+export class EmployeeService {
+  private readonly logger = new Logger(EmployeeService.name);
   constructor(@InjectModel('Employee') private employeeModel:Model<Employee>, @InjectModel('Skill') private skillModel:Model<Skill>,
   private readonly employeeAnalyticsService: EmployeeAnalyticsService){ }
    
@@ -34,19 +33,6 @@ export class EmployeeSkillService {
     return newEmployee.save();
   }
 
-  // Create the skill in mongo db.
-  async createSkill(createSkillDto: CreateSkillDto): Promise<Skill> {
-    const skillName = createSkillDto.name;
-    const existingSkill = await this.skillModel.findOne({ Name: skillName }).exec();
-    console.log("Skill Data:", existingSkill);
-    if (existingSkill) {
-      throw new ConflictException("Skill already exists");
-    }
-    const newSkill = new this.skillModel(createSkillDto);
-    console.log("Created the skill");
-    return newSkill.save();
-  }
-  
   // Update the employee in db.
   async updateEmployee(EmpId: string, updateEmployeeDto: UpdateEmployeeDto): Promise<Employee> {
     const filter = {EmployeeId: EmpId};
@@ -153,16 +139,6 @@ export class EmployeeSkillService {
       this.logger.error(`Employee #${empName} not found`);
     } 
     return deletedEmployee;
-  }
-  
-  // Delete the specific skill from collection.
-  async deleteSkill(skill: string): Promise<Skill> {
-    const filter = {Name: skill};
-    const deletedSkill = await this.skillModel.findOneAndDelete(filter).exec();
-    if (!deletedSkill) {
-      this.logger.error(`Skill #${skill} not found`);
-    } 
-    return deletedSkill;
   }
 
   // Get matched employees of speciied skill from db without pipeline.
