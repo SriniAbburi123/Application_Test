@@ -2,7 +2,7 @@ import { Module, Global } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
-import { EmployeeSkillModule } from '../modules/employeeSkill.module';
+import { EmployeeModule } from '../modules/employee/employee.module';
 import { AuthController } from './auth.controller';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
@@ -11,7 +11,7 @@ import { jwtConstants } from './constants';
 @Global()
 @Module({
   imports: [
-    EmployeeSkillModule,
+    EmployeeModule,
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,

@@ -3,11 +3,11 @@ import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ResponseInterceptor } from './utils/loggerModule/logger.interceptor';
+import { AppModule } from './app.module';
 import { validateEnvVariables } from './utils/env.validator';
 import { config } from 'dotenv';
 config();
 validateEnvVariables();
-import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -40,15 +40,6 @@ async function bootstrap() {
       'JWTBearerAuth',
     )
     .addGlobalParameters(
-      {
-        name: 'language',
-        in: 'header',
-        required: true,
-        description: 'language is required',
-        allowEmptyValue: false,
-        // example: 'en',
-        schema: { type: 'string', default: 'en' },
-      },
       {
         name: 'x-api-version',
         in: 'header',

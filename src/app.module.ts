@@ -1,4 +1,5 @@
 import { Logger, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import * as crypto from 'crypto';
@@ -7,6 +8,7 @@ import { EmployeeModule } from './modules/employee/employee.module';
 import { EmployeeAnalyticsModule } from './modules//employee/employeeAnalytics.module';
 import { SkillModule } from './modules/skill/skill.module';
 import { EmployeeController } from './modules/employee/employee.controller';
+import { SkillController } from './modules/skill/skill.controller';
 import { LoggerMiddleware } from './utils/loggerModule/logger.middleware';
 import { EmployeeSchema } from './models/schemas/EmployeeSchema';
 import { SkillSchema } from './models/schemas/SkillSchema';
@@ -36,9 +38,12 @@ function decrypt(text: string): string {
   MongooseModule.forFeature([
     { name: 'Employee', schema: EmployeeSchema},
     { name: 'Skill', schema: SkillSchema }
-  ])
+  ]),
+  ConfigModule.forRoot({
+    isGlobal: true, // Makes the configuration available globally
+    }),
 ],
-  controllers: [EmployeeController],
+  controllers: [EmployeeController, SkillController],
   providers: [
   {
     provide: APP_GUARD,

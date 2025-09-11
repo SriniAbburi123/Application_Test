@@ -3,14 +3,13 @@
     "declaration": true,
     "emitDecoratorMetadata": true,
     "allowSyntheticDefaultImports": true,
-    "target": "ES2017",
+    "target": "es2017",
     "sourceMap": true,
-    "module": "CommonJs",
+    "module": "commonJs",
     "outDir": "./dist",
     "rootDir": "./src",
     "baseUrl": "./",
     "incremental": true,
-    "strict": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "skipLibCheck": true,
@@ -21,8 +20,8 @@
     "noFallthroughCasesInSwitch": false,
     "strictPropertyInitialization": false,  
     "resolveJsonModule": true,
-    "allowImportingTsExtensions": true,
-    "noEmit": true,
+    "allowImportingTsExtensions": false,
+    "noEmit": false,
     "allowJs": true
   }
 }

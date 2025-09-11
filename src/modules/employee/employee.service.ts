@@ -21,26 +21,27 @@ export class EmployeeService {
    
   // Create the employee in mongo db.
   async createEmployee(createEmployeeDto: CreateEmployeeDto): Promise<Employee> {
-    console.log("Employee Data: ", createEmployeeDto);
     const empId = createEmployeeDto.name;
     const existingEmployee = await this.employeeModel.findOne({ EmployeeId: empId }).exec();
-    // console.log("Employee Data:", existingEmployee);
+    
     if (existingEmployee) {
       this.logger.error("Employee alreadt exists");
+      return null;
     }
     const newEmployee = new this.employeeModel(createEmployeeDto);
-    console.log("Created the employee");
+    this.logger.debug("createEmployee: Created Employee Data:", newEmployee);
     return newEmployee.save();
   }
 
   // Update the employee in db.
   async updateEmployee(EmpId: string, updateEmployeeDto: UpdateEmployeeDto): Promise<Employee> {
     const filter = {EmployeeId: EmpId};
-    const existingEmployee = await this.employeeModel.findOneAndUpdate(filter, updateEmployeeDto, { new: true }).exec();
-    if (!existingEmployee) {
-      this.logger.error(`Employee #${EmpId} not found`);
+    const UpdateEmployee = await this.employeeModel.findOneAndUpdate(filter, updateEmployeeDto, { new: true }).exec();
+    this.logger.debug("Updated Employee:", UpdateEmployee);
+    if (!UpdateEmployee) {
+      this.logger.error(`updateEmployee: Employee #${EmpId} not found`);
     }
-    return existingEmployee;
+    return UpdateEmployee;
   }
 
   // Get All skilled employees from DB using pipeline.
@@ -63,10 +64,7 @@ export class EmployeeService {
       { $unset: "_id" },
       { $sort: { EmployeeId: 1 },}, 
     ]);
-    
-    console.log("Employee Data: ", JSON.stringify(employeeData, null,2));
-    console.log("Employee Data: ", employeeData);
-
+    this.logger.debug("getAllSkilledEmployees: Skilled Employee Data:", employeeData);
     return employeeData;
   }
 
@@ -83,19 +81,13 @@ export class EmployeeService {
     ]);
 
     const count = await this.employeeModel.countDocuments({ EmployeeSkills: skill });
-
-    console.log("Count:", count);
-    console.log("Employees Data: ", employeeData);
-    
-    const data:GetMatchedEmployeeSkillsResponse = {count:count, empSkill:skill, employeeData}
+    const data:GetMatchedEmployeeSkillsResponse = {count:count, empSkill:skill, employeeData};
+    this.logger.debug("getSkilledEmployees: Skilled Employee Data:", data);
     return data;
   }
 
   // Get matched employees of speciied skill from db using pipeline.
   async getMatchedEmployees(empSkill:string): Promise<GetMatchedEmployeeSkillsResponse> {
-    console.log("In the service method: getMatchedEmployees")
-    console.log("Employee Skill: ", empSkill);
-    
     const employeeData:GetMatchedEmployeeSkillsResponseDto[] = await this.employeeModel.aggregate([
       { $match: { EmployeeSkills: empSkill }, },
       { $project: { EmployeeName: 1, _id: 0 } },
@@ -103,11 +95,8 @@ export class EmployeeService {
     ]);
 
     const count = await this.employeeModel.countDocuments({ EmployeeSkills: empSkill });
-    
-    console.log("Count:", count);
-    console.log("Employees Data: ", employeeData);
-   
-    const data:GetMatchedEmployeeSkillsResponse = {count, empSkill, employeeData}
+    const data:GetMatchedEmployeeSkillsResponse = {count, empSkill, employeeData};
+    this.logger.debug("getMatchedEmployees: Matched Employee Data:", data);
     return data;
   }
 
@@ -115,18 +104,16 @@ export class EmployeeService {
   async getAllEmployees(): Promise<Employee[]> {
     const employeeData = await this.employeeModel.find().exec();
     if (!employeeData || employeeData.length == 0) {
-      this.logger.error('Employees data not found!');
+      this.logger.error('getAllEmployees: Employees data not found!');
     }
     return employeeData;
   }
 
   // Get the data of the specific Employee from db.
   async getEmployee(empName: string): Promise<Employee> {
-    console.log("Employee Name: ", empName);
     const existingEmployee = await this.employeeModel.findOne({ EmployeeName: empName }).exec();
-    console.log("Employee Data:", existingEmployee);
     if (!existingEmployee) {
-      this.logger.error(`Employee #${empName} not found`);
+      this.logger.error(`getEmployee: Employee #${empName} not found`);
     }
     return existingEmployee;
   }
@@ -136,25 +123,24 @@ export class EmployeeService {
     const filter = {EmployeeId: empName};
     const deletedEmployee = await this.employeeModel.findOneAndDelete(filter).exec();
     if (!deletedEmployee) {
-      this.logger.error(`Employee #${empName} not found`);
+      this.logger.error(`deleteEmployee: Employee #${empName} not found`);
     } 
     return deletedEmployee;
   }
 
   // Get matched employees of speciied skill from db without pipeline.
   async getEmployeesOfSkill(skill:string):Promise<any> { 
-    //console.log(" Skill required: ", skill);
     const employeesOfSkill = await this.employeeModel.find({ EmployeeSkills: skill }).exec();
     const count = await this.employeeModel.countDocuments({ EmployeeSkills: skill });
     const employeesOutput: any[] = [];
 
     for (const user of employeesOfSkill) {
-      console.log ( 'Count:' + count, ' Id: ' + user.Name, 'Name: ');
+      // this.logger.debug( 'Count:' + count, ' Id: ' + user.Name, 'Name: ');
       const userJson = {
         'employeeName': user.Name,
       }
       employeesOutput.push(userJson);
-      console.log("Skills Response: ", employeesOutput);
+      this.logger.debug("getEmployeesOfSkill: Skills Response: ", employeesOutput);
     }
     const data = [{
       Skill: skill,
@@ -170,11 +156,12 @@ export class EmployeeService {
     const filter = {EmployeeName: empName};
     // Caluclate the engagement score
     const score = this.employeeAnalyticsService.calculateEngagementScore(updateEmployeeDto);
-
+    this.logger.debug("updateScore: Employee score: ", score);
+    // Update the employee record with the score.
     const existingEmployee = await this.employeeModel.findByIdAndUpdate(filter, { $set: { EngagementScore: score }}).exec();
-    this.logger.debug(`Updated Employee #${existingEmployee}`);
+    this.logger.debug(`updateScore: Updated Employee #${existingEmployee}`);
     if (!existingEmployee) {
-      this.logger.error(`Employee #${empName} not found`);
+      this.logger.error(`updateScore: Employee #${empName} not found`);
     }
     return existingEmployee;
   }
@@ -183,12 +170,21 @@ export class EmployeeService {
   async addSkillsToEmployee(addSkillsDto:AddSkillsEmployeeDto): Promise<Employee> {
     const empId = addSkillsDto.empId;
     const skills = addSkillsDto.skills;
-    const filter = {_id: empId};
-    // const updatedEmployee = await this.employeeModel.findOneAndUpdate(filter, skills, { new: true }).exec();
-    const updatedEmployee = await this.employeeModel.findByIdAndUpdate(filter, { $set: { skill: skills }}).exec();
+    const employeeFilter = {_id: empId};
+    for (const skill of skills) {
+      const skillFilter = {name: skill};
+      // Check the skills exist in Skill documents. Return if it doesn't exist.
+      const skillsExist = await this.skillModel.findOne(skillFilter).exec();
+      if (!skillsExist) {
+        this.logger.error(`addSkillsToEmployee: Skill #${skill} not found`);
+        return null;
+      }
+    }
+    // Update the employee with the skills. 
+    const updatedEmployee = await this.employeeModel.findByIdAndUpdate(employeeFilter, { $set: { skill: skills }}).exec();
     this.logger.debug(`Updated Employee #${updatedEmployee}`);
     if (!updatedEmployee) {
-      this.logger.error(`Employee #${empId} not found`);
+      this.logger.error(`updatedEmployee: Error in updating the employee record Employee #${empId}`);
     }
     return updatedEmployee;
   }

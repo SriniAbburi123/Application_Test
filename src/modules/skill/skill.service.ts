@@ -12,12 +12,14 @@ export class SkillService {
   async createSkill(createSkillDto: CreateSkillDto): Promise<Skill> {
     const skillName = createSkillDto.name;
     const existingSkill = await this.skillModel.findOne({ Name: skillName }).exec();
-    console.log("Skill Data:", existingSkill);
+    this.logger.debug("createSkill: Skill Data:", existingSkill);
+    // Return null if skill already exists
     if (existingSkill) {
-      throw new ConflictException("Skill already exists");
+      this.logger.error("createSkill: Skill already exists");
+      return null;
     }
     const newSkill = new this.skillModel(createSkillDto);
-    console.log("Created the skill");
+    this.logger.debug("createSkill: Added Skill Data:", newSkill);
     return newSkill.save();
   }
 
@@ -26,7 +28,8 @@ export class SkillService {
      const filter = {name: skillName};
      const existingSkill = await this.skillModel.findOneAndUpdate(filter, updateSkillDto, { new: true }).exec();
      if (!existingSkill) {
-       this.logger.error(`Skill #${skillName} not found`);
+       this.logger.error(`updateSkill: Skill #${skillName} not found`);
+       return null;
      }
      return existingSkill;
   }
@@ -36,7 +39,8 @@ export class SkillService {
     const filter = {Name: skill};
     const deletedSkill = await this.skillModel.findOneAndDelete(filter).exec();
     if (!deletedSkill) {
-      this.logger.error(`Skill #${skill} not found`);
+      this.logger.error(`deleteSkill: Skill #${skill} not found`);
+      return null;
     } 
     return deletedSkill;
   }

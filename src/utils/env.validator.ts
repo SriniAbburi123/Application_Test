@@ -1,4 +1,6 @@
 import { Logger } from '@nestjs/common';
+
+/*
 const requiredEnvVars = [
     'LOG_FILE_PATH',
     'LOG_FILE_ROTATE_FREQUENCY',
@@ -25,11 +27,20 @@ const requiredEnvVars = [
     'DB_USER',
     'DB_PASS'
 ]
+*/
+const requiredEnvVars = [
+    'PORT',
+    'JWT_SECRET',
+    'NODE_ENV',
+    'DB_HOST',
+    'DB_USER',
+    'DB_PASS'
+]
 
 export function validateEnvVariables(): void {
   const logger = new Logger('EnvValidator');
-  logger.log('Validating environment variables...');
-  console.log('requiredEnvVars\n', requiredEnvVars);
+  logger.debug('validateEnvVariables: Validating environment variables...');
+  logger.debug('validateEnvVariables: requiredEnvVars\n', requiredEnvVars);
   // Define all required environment variables
   
   const missingEnvVars = requiredEnvVars.filter(

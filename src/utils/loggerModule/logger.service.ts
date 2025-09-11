@@ -1,6 +1,6 @@
 import { Injectable, LoggerService as NestLoggerService } from '@nestjs/common';
 import * as winston from 'winston';
-import 'winston-daily-rotate-file';
+import DailyRotateFile from 'winston-daily-rotate-file';
 // import * as colors from 'colors/safe';
 import { v4 as uuidv4 } from 'uuid';
 import { RequestLog } from './logger.types';
@@ -116,7 +116,7 @@ export class LoggerService implements NestLoggerService {
       transports.push(rotateFileTransport);
       
     } catch (error) {
-      console.warn('Could not initialize file logging, using console only:', error.message);
+      console.warn('Could not initialize file logging, using console only:', error);
     }
 
     this.logger = winston.createLogger({
