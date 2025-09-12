@@ -1,19 +1,20 @@
-import { Body, Controller, Logger, Delete, Get, Query, HttpStatus, Param, Post, Put, Res } from '@nestjs/common';
-import { Roles } from '../../auth/decorators/roles.decorator';
+import { Body, Controller, Logger, Delete, Get, Query, HttpStatus, Param, Post, Put, Res, UseGuards } from '@nestjs/common';
+import { RolesGuard } from '../auth/roles.guard';
+import { Roles } from '../auth/decorators/roles.decorator';
 import { Role } from '../../models/enums/roles.enum';
-import { isValidObjectId } from 'mongoose';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { EmployeeService } from './employee.service';
-import { CreateEmployeeDto, UpdateEmployeeDto } from '../../models/dtos/createEmployee.dto';
+import { CreateEmployeeDto, UpdateEmployeeDto } from './models/dtos/createEmployee.dto';
 import { 
   GetMatchedEmployeeSkillsResponse
- } from '../../models/dtos/get-matched-employee-skills-response.dto';
-import { PostMatchedEmployeeDto } from '../../models/dtos/post-matched-employee.dto';
-import {GetMatchedEmployeeAllSkillsResponse}  from '../../models/dtos/get-matched-employee-skills-response.dto';
-import { AddSkillsEmployeeDto } from 'src/models/dtos/addSkillToEmployee.dto';
+ } from './models/dtos/get-matched-employee-skills-response.dto';
+import { PostMatchedEmployeeDto } from './models/dtos/post-matched-employee.dto';
+import {GetMatchedEmployeeAllSkillsResponse}  from './models/dtos/get-matched-employee-skills-response.dto';
+import { AddSkillsEmployeeDto } from './models/dtos/addSkillToEmployee.dto';
 
-@ApiTags('Application')
-@Controller('Application')
+@ApiTags('Employee')
+@UseGuards(RolesGuard)
+@Controller('Employee')
 export class EmployeeController {
   private readonly logger = new Logger(EmployeeController.name);
   constructor(private readonly employeeService: EmployeeService) { }
@@ -136,6 +137,7 @@ export class EmployeeController {
   }
 
   @Get('AllskilledEmployees')
+  @Roles(Role.User)
   @ApiOperation({
     summary: 'Get all Employees of matching skill',
   })
@@ -159,6 +161,7 @@ export class EmployeeController {
   }
 
   @Post('skilledEmployees')
+  @Roles(Role.User)
   @ApiOperation({
   summary: 'Get all Employees of matching skill',
     })
@@ -183,6 +186,7 @@ export class EmployeeController {
   }
 
   @Get('list')
+  @Roles(Role.User)
   @ApiOperation({
     summary: 'Get the list of Employees of matching skill',
   })
@@ -207,6 +211,7 @@ export class EmployeeController {
   }
 
   @Get('Skills')
+  @Roles(Role.User)
   @ApiOperation({
     summary: 'Get all Employees of matching skill',
   })
@@ -228,6 +233,7 @@ export class EmployeeController {
   }
 
   @Get()
+  @Roles(Role.User)
   @ApiOperation({
     summary: 'Get all Employee data',
   })
@@ -250,6 +256,7 @@ export class EmployeeController {
   }
 
   @Get(':EmployeeName')
+  @Roles(Role.User)
   @ApiOperation({
     summary: 'Get specified Employee data',
   })

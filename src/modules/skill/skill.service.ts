@@ -1,8 +1,8 @@
 import { Injectable, Logger,PipeTransform, NotFoundException, InternalServerErrorException, BadRequestException, ConflictException, Get } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { Skill } from '../../models/schemas/SkillSchema';
-import { CreateSkillDto, UpdateSkillDto } from '../../models/dtos/createSkill.dto';
+import { Skill } from './models/schemas/SkillSchema';
+import { CreateSkillDto, UpdateSkillDto } from './models/dtos/createSkill.dto';
 @Injectable()
 export class SkillService {
   private readonly logger = new Logger(SkillService.name);
@@ -24,7 +24,8 @@ export class SkillService {
   }
 
   // Update the Skill in db.
-   async updateSkill(skillName: string, updateSkillDto: UpdateSkillDto): Promise<Skill> {
+   async updateSkill(updateSkillDto: UpdateSkillDto): Promise<Skill> {
+     const skillName = updateSkillDto.name;
      const filter = {name: skillName};
      const existingSkill = await this.skillModel.findOneAndUpdate(filter, updateSkillDto, { new: true }).exec();
      if (!existingSkill) {
@@ -44,4 +45,14 @@ export class SkillService {
     } 
     return deletedSkill;
   }
+
+  // Get all the data from the Employee collection.
+    async getAllSkills(): Promise<Skill[]> {
+      const skillData = await this.skillModel.find().exec();
+      if (!skillData || skillData.length == 0) {
+        this.logger.error('getAllEmployees: Employees data not found!');
+      }
+      return skillData;
+    }
+  
 }

@@ -9,6 +9,7 @@ export class Employee extends Document {
   Name: string;
   @Prop({ type: String })
   Position: string;
+  // @Prop({ type: Schema.Types.ObjectId, ref: 'Skill'})
   @Prop({ type: String, ref: 'Skill' })
   Skills: [string];
   @Prop({ type: String })

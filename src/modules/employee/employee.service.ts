@@ -2,16 +2,16 @@ import { Injectable, Logger,PipeTransform, NotFoundException, InternalServerErro
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { EmployeeAnalyticsService } from './employeeAnalytics.service';
-import { Employee } from '../../models/schemas/EmployeeSchema';
-import { Skill } from '../../models/schemas/SkillSchema';
-import { CreateEmployeeDto, UpdateEmployeeDto } from '../../models/dtos/createEmployee.dto';
-import {GetMatchedEmployeeAllSkillsResponse}  from '../../models/dtos/get-matched-employee-skills-response.dto';
+import { Employee } from './models/schemas/EmployeeSchema';
+import { Skill } from '../skill/models/schemas/SkillSchema';
+import { CreateEmployeeDto, UpdateEmployeeDto } from './models/dtos/createEmployee.dto';
+import { GetMatchedEmployeeAllSkillsResponse }  from './models/dtos/get-matched-employee-skills-response.dto';
 import { 
   GetMatchedEmployeeSkillsResponseDto,
   GetMatchedEmployeeSkillsResponse
- } from '../../models/dtos/get-matched-employee-skills-response.dto';
-import { PostMatchedEmployeeDto } from '../../models/dtos/post-matched-employee.dto';
-import { AddSkillsEmployeeDto } from '../../models/dtos/addSkillToEmployee.dto';
+ } from './models/dtos/get-matched-employee-skills-response.dto';
+import { PostMatchedEmployeeDto } from './models/dtos/post-matched-employee.dto';
+import { AddSkillsEmployeeDto } from './models/dtos/addSkillToEmployee.dto';
 
 @Injectable()
 export class EmployeeService {
@@ -155,15 +155,15 @@ export class EmployeeService {
     const empName = updateEmployeeDto.name;
     const filter = {EmployeeName: empName};
     // Caluclate the engagement score
-    const score = this.employeeAnalyticsService.calculateEngagementScore(updateEmployeeDto);
+    const score = this.employeeAnalyticsService.getEngagementScore(updateEmployeeDto);
     this.logger.debug("updateScore: Employee score: ", score);
     // Update the employee record with the score.
-    const existingEmployee = await this.employeeModel.findByIdAndUpdate(filter, { $set: { EngagementScore: score }}).exec();
-    this.logger.debug(`updateScore: Updated Employee #${existingEmployee}`);
-    if (!existingEmployee) {
+    const updateEmployee = await this.employeeModel.findByIdAndUpdate(filter, { $set: { EngagementScore: score }}).exec();
+    this.logger.debug(`updateScore: Updated Employee #${updateEmployee}`);
+    if (!updateEmployee) {
       this.logger.error(`updateScore: Employee #${empName} not found`);
     }
-    return existingEmployee;
+    return updateEmployee;
   }
 
   // Add the specified skills to the corresponding Employee.
@@ -187,5 +187,22 @@ export class EmployeeService {
       this.logger.error(`updatedEmployee: Error in updating the employee record Employee #${empId}`);
     }
     return updatedEmployee;
+  }
+
+  // Calculate the engagement score of the employee.
+  async calculateEngagementScore(updateEmployeeDto: UpdateEmployeeDto): Promise<Number> {
+    this.logger.debug("calculateEngagementScore: Employee Data: ", updateEmployeeDto);
+    const empName = updateEmployeeDto.name;
+    const existingEmployee = await this.employeeModel.findOne({ EmployeeName: empName }).exec();
+    if (!existingEmployee) {
+      this.logger.error("Employee doesn't exist in database");
+    }
+    const skills = existingEmployee.Skills;
+    const hireDate = existingEmployee.HireDate;
+    const todayDate = new Date();
+    const yearsDifference = todayDate.getFullYear() - hireDate.getFullYear();
+    const score = (skills.length) * 10  + yearsDifference * 5;
+    this.logger.debug("calculateEngagementScore: Engagement score: ", score);
+    return score;
   }
 }

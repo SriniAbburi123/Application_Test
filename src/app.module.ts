@@ -1,18 +1,15 @@
 import { Logger, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
-import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import * as crypto from 'crypto';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { AuthModule } from './modules/auth/auth.module';
 import { EmployeeModule } from './modules/employee/employee.module';
 import { EmployeeAnalyticsModule } from './modules//employee/employeeAnalytics.module';
 import { SkillModule } from './modules/skill/skill.module';
-import { EmployeeController } from './modules/employee/employee.controller';
-import { SkillController } from './modules/skill/skill.controller';
 import { LoggerMiddleware } from './utils/loggerModule/logger.middleware';
-import { EmployeeSchema } from './models/schemas/EmployeeSchema';
-import { SkillSchema } from './models/schemas/SkillSchema';
-
+ 
 function getKey(key: string): Buffer {
   return crypto.createHash('sha256').update(key).digest();
 }
@@ -30,24 +27,29 @@ function decrypt(text: string): string {
 }
 
 @Module({imports: [
+  AuthModule,
   EmployeeModule,
   SkillModule,
   EmployeeAnalyticsModule,
   MongooseModule.forRoot('mongodb://localhost:27017',{
   dbName: 'employeedb'}),
-  MongooseModule.forFeature([
-    { name: 'Employee', schema: EmployeeSchema},
-    { name: 'Skill', schema: SkillSchema }
-  ]),
+  ThrottlerModule.forRoot({
+    throttlers: [
+      {
+      ttl: 2,
+      limit: 100,
+      }
+    ],
+  }),
   ConfigModule.forRoot({
     isGlobal: true, // Makes the configuration available globally
     }),
 ],
-  controllers: [EmployeeController, SkillController],
+   
   providers: [
   {
     provide: APP_GUARD,
-    useClass: ThrottlerGuard,  
+     useClass: ThrottlerGuard,
   },
   Logger,
   ],

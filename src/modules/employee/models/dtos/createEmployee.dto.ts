@@ -9,7 +9,7 @@ import {
 } from 'class-validator';
 import { PartialType } from "@nestjs/mapped-types";
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Role } from '../enums/roles.enum';
+import { Role } from '../../../../models/enums/roles.enum';
 
 export class CreateEmployeeDto {
   @ApiProperty({ description: 'Employee Name' })

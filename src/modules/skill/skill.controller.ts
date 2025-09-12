@@ -1,11 +1,13 @@
-import { Body, Controller, Logger, Delete, Get, Query, HttpStatus, Param, Post, Put, Res } from '@nestjs/common';
-import { Roles } from '../../auth/decorators/roles.decorator';
+import { Body, Controller, Logger, HttpStatus, Param, Delete, Get, Post, Put, Res, UseGuards } from '@nestjs/common';
+import { Roles } from '../auth/decorators/roles.decorator';
 import { Role } from '../../models/enums/roles.enum';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { SkillService } from './skill.service';
-import { CreateSkillDto, UpdateSkillDto } from '../../models/dtos/createSkill.dto';
+import { CreateSkillDto, UpdateSkillDto } from './models/dtos/createSkill.dto';
+import { RolesGuard } from '../auth/roles.guard';
 
 @ApiTags('Skill')
+@UseGuards(RolesGuard)
 @Controller('Skill')
 export class SkillController {
   private readonly logger = new Logger(SkillController.name);
@@ -41,6 +43,30 @@ export class SkillController {
     }
   }
 
+  @Put('Update Skill')
+  @Roles(Role.Admin)
+  @ApiOperation({
+    summary: 'Update specified Skill record',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Skill data updated successfully',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Skill not found',
+  })
+  async updateSkill(@Res() response, @Body() updateSkillDto: UpdateSkillDto){
+    try {
+      const updatedSkill = await this.skillService.updateSkill(updateSkillDto);
+      return response.status(HttpStatus.OK).json({
+      message: 'Skill updated successfully',
+      updatedSkill});
+    }catch (err) {
+      return response.status(err).json(err);
+    }
+  }
+
   @Delete(':skill')
   @Roles(Role.Admin)
   @ApiOperation({
@@ -61,6 +87,29 @@ export class SkillController {
       message: 'Skill deleted successfully',
       deletedSkill,});
     }catch (err) {
+      return response.status(err).json(err);
+    }
+  }
+
+  @Get()
+  @Roles(Role.User)
+  @ApiOperation({
+    summary: 'Get all Skill data',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Skills fetched successfully',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Skills not found',
+  })
+  async getAllSkills(@Res() response) {
+    try {
+      const skillData = await this.skillService.getAllSkills();
+      return response.status(HttpStatus.OK).json({
+      message: 'All Employees data found successfully',skillData});
+    } catch (err) {
       return response.status(err).json(err);
     }
   }
