@@ -1,4 +1,4 @@
-import { Injectable, Logger,PipeTransform, NotFoundException, InternalServerErrorException, BadRequestException, ConflictException, Get } from '@nestjs/common';
+import { Injectable, Inject, forwardRef, Logger,PipeTransform, NotFoundException, InternalServerErrorException, BadRequestException, ConflictException, Get } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { EmployeeAnalyticsService } from './employeeAnalytics.service';
@@ -10,14 +10,16 @@ import {
   GetMatchedEmployeeSkillsResponseDto,
   GetMatchedEmployeeSkillsResponse
  } from './models/dtos/get-matched-employee-skills-response.dto';
-import { PostMatchedEmployeeDto } from './models/dtos/post-matched-employee.dto';
+import { SkillSelectionDto } from './models/dtos/skill-selection.dto';
 import { AddSkillsEmployeeDto } from './models/dtos/addSkillToEmployee.dto';
+export type  WrapperType<T> = T;
 
 @Injectable()
 export class EmployeeService {
   private readonly logger = new Logger(EmployeeService.name);
   constructor(@InjectModel('Employee') private employeeModel:Model<Employee>, @InjectModel('Skill') private skillModel:Model<Skill>,
-  private readonly employeeAnalyticsService: EmployeeAnalyticsService){ }
+    @Inject(forwardRef(() => EmployeeAnalyticsService))
+    private readonly employeeAnalyticsService: WrapperType<EmployeeAnalyticsService>) {}
    
   // Create the employee in mongo db.
   async createEmployee(createEmployeeDto: CreateEmployeeDto): Promise<Employee> {
@@ -69,10 +71,10 @@ export class EmployeeService {
   }
 
   // Get skilled employees from DB using pipeline in a specific format.
-  async getSkilledEmployees(postMatchEmployeeDto:PostMatchedEmployeeDto): Promise<GetMatchedEmployeeSkillsResponse> {
+  async getSkilledEmployees(skillSelectionDto:SkillSelectionDto): Promise<GetMatchedEmployeeSkillsResponse> {
     console.log("In the service method: getMatchedEmployees")
-    console.log("Employee Skill: ", postMatchEmployeeDto.empSkill);
-    const skill =  postMatchEmployeeDto.empSkill;
+    console.log("Employee Skill: ", skillSelectionDto.empSkill);
+    const skill =  skillSelectionDto.empSkill;
     console.log("Required SKill:", skill);
     const employeeData:GetMatchedEmployeeSkillsResponseDto[] = await this.employeeModel.aggregate([
     { $match: { EmployeeSkills: skill }, },
@@ -189,20 +191,5 @@ export class EmployeeService {
     return updatedEmployee;
   }
 
-  // Calculate the engagement score of the employee.
-  async calculateEngagementScore(updateEmployeeDto: UpdateEmployeeDto): Promise<Number> {
-    this.logger.debug("calculateEngagementScore: Employee Data: ", updateEmployeeDto);
-    const empName = updateEmployeeDto.name;
-    const existingEmployee = await this.employeeModel.findOne({ EmployeeName: empName }).exec();
-    if (!existingEmployee) {
-      this.logger.error("Employee doesn't exist in database");
-    }
-    const skills = existingEmployee.Skills;
-    const hireDate = existingEmployee.HireDate;
-    const todayDate = new Date();
-    const yearsDifference = todayDate.getFullYear() - hireDate.getFullYear();
-    const score = (skills.length) * 10  + yearsDifference * 5;
-    this.logger.debug("calculateEngagementScore: Engagement score: ", score);
-    return score;
-  }
+  
 }

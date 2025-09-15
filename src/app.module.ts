@@ -5,6 +5,8 @@ import * as crypto from 'crypto';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { AuthModule } from './modules/auth/auth.module';
+import { AuthGuard } from './modules/auth/auth.guard';
+import { RolesGuard } from './modules/auth/roles.guard';
 import { EmployeeModule } from './modules/employee/employee.module';
 import { EmployeeAnalyticsModule } from './modules//employee/employeeAnalytics.module';
 import { SkillModule } from './modules/skill/skill.module';
@@ -50,6 +52,14 @@ function decrypt(text: string): string {
   {
     provide: APP_GUARD,
      useClass: ThrottlerGuard,
+  },
+  {
+    provide: APP_GUARD,
+     useClass: AuthGuard,
+  },
+  {
+    provide: APP_GUARD,
+     useClass: RolesGuard,
   },
   Logger,
   ],

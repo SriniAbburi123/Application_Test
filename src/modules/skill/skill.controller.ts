@@ -1,12 +1,13 @@
 import { Body, Controller, Logger, HttpStatus, Param, Delete, Get, Post, Put, Res, UseGuards } from '@nestjs/common';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { Role } from '../../models/enums/roles.enum';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { SkillService } from './skill.service';
 import { CreateSkillDto, UpdateSkillDto } from './models/dtos/createSkill.dto';
 import { RolesGuard } from '../auth/roles.guard';
 
 @ApiTags('Skill')
+@ApiBearerAuth()
 @UseGuards(RolesGuard)
 @Controller('Skill')
 export class SkillController {

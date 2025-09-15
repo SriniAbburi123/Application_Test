@@ -97,7 +97,8 @@ export class LoggerService implements NestLoggerService {
       fs.unlinkSync(testFile);
 
       // If we reach here, we have write permissions
-      const rotateFileTransport = new winston.transports.DailyRotateFile({
+      // const rotateFileTransport = new winston.transports.DailyRotateFile({
+      const transport: DailyRotateFile = new DailyRotateFile({
         filename: logFilePath,
         datePattern: process.env.LOG_FILE_ROTATE_FREQUENCY || 'YYYY-MM-DD',
         maxSize: process.env.LOG_FILE_MAX_SIZE || '20m',
@@ -109,11 +110,13 @@ export class LoggerService implements NestLoggerService {
       });
 
       // Add error handling for the file transport
-      rotateFileTransport.on('error', (error) => {
+      // rotateFileTransport.on('error', (error) => {
+      transport.on('error', (error) => {
         console.error('Winston file transport error:', error);
       });
 
-      transports.push(rotateFileTransport);
+      // transports.push(rotateFileTransport);
+      transports.push(transport);
       
     } catch (error) {
       console.warn('Could not initialize file logging, using console only:', error);

@@ -1,13 +1,15 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Inject, forwardRef, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { EmployeeService } from '../employee/employee.service';
+import { LoggerService } from 'src/utils/loggerModule/logger.service';
 
-@Injectable()
 export class AuthService {
+  private readonly logger = new LoggerService();
   constructor(
-    private employeeService: EmployeeService,
     private jwtService: JwtService,
-  ) {}
+    private readonly employeeService:EmployeeService) {
+      this.logger.setContext(AuthService.name);
+  }
 
   async signIn(username: string, pass: string) {
     const user = await this.employeeService.getEmployee(username);

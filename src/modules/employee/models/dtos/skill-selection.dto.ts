@@ -6,7 +6,7 @@ import {
   IsString,
 } from 'class-validator';
 
-export class PostMatchedEmployeeDto {
+export class SkillSelectionDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()

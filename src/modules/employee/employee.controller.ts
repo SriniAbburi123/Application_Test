@@ -2,24 +2,24 @@ import { Body, Controller, Logger, Delete, Get, Query, HttpStatus, Param, Post, 
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { Role } from '../../models/enums/roles.enum';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiBody, ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { EmployeeService } from './employee.service';
 import { CreateEmployeeDto, UpdateEmployeeDto } from './models/dtos/createEmployee.dto';
 import { 
   GetMatchedEmployeeSkillsResponse
  } from './models/dtos/get-matched-employee-skills-response.dto';
-import { PostMatchedEmployeeDto } from './models/dtos/post-matched-employee.dto';
+import { SkillSelectionDto } from './models/dtos/skill-selection.dto';
 import {GetMatchedEmployeeAllSkillsResponse}  from './models/dtos/get-matched-employee-skills-response.dto';
 import { AddSkillsEmployeeDto } from './models/dtos/addSkillToEmployee.dto';
 
 @ApiTags('Employee')
-@UseGuards(RolesGuard)
 @Controller('Employee')
 export class EmployeeController {
   private readonly logger = new Logger(EmployeeController.name);
   constructor(private readonly employeeService: EmployeeService) { }
   @Post('createEmployee')
   @Roles(Role.Admin)
+  @ApiBody({ type: CreateEmployeeDto })
   @ApiOperation({
     summary: 'Add Employee in the database',
   })
@@ -50,6 +50,7 @@ export class EmployeeController {
 
   @Post('AddSkillsToEmployee')
   @Roles(Role.Admin)
+  @ApiBody({ type: AddSkillsEmployeeDto })
   @ApiOperation({
     summary: 'Add Skills to Employee in the database',
   })
@@ -109,6 +110,7 @@ export class EmployeeController {
 
   @Put('/UpdateScore')
   @Roles(Role.Admin)
+  @ApiBody({ type: UpdateEmployeeDto })
   @ApiOperation({
     summary: 'Update the score of the employee)',
   })
@@ -121,7 +123,7 @@ export class EmployeeController {
     status: 400,
     description: 'Failed to update the score',
   })
-  async updateScore(@Res() response, updateEmployeeDto:UpdateEmployeeDto) {
+  async updateScore(@Res() response,  @Body() updateEmployeeDto:UpdateEmployeeDto) {
     try {
       const existingSkill = await this.employeeService.updateScore(updateEmployeeDto);
       return response.status(HttpStatus.OK).json({
@@ -174,11 +176,11 @@ export class EmployeeController {
     status: 400,
     description: 'Employees not found',
   })
-  async getSkilledEmployees(@Body() postMatchEmployeeDto:PostMatchedEmployeeDto, @Res() response) {
+  async getSkilledEmployees(@Body() skillSelectionDto:SkillSelectionDto, @Res() response) {
     try {
       // console.log('In the controller method: getMatchedEmployees.name');
       // console.log('In the controller method: getMatchedEmployees.name : empSkill:', empSkill);
-      const data: GetMatchedEmployeeSkillsResponse = await this.employeeService.getSkilledEmployees(postMatchEmployeeDto);
+      const data: GetMatchedEmployeeSkillsResponse = await this.employeeService.getSkilledEmployees(skillSelectionDto);
       return response.status(HttpStatus.OK).json({data});
     } catch (err) {
       return response.status(err).json(err);

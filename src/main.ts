@@ -9,11 +9,13 @@ import { config } from 'dotenv';
 config();
 validateEnvVariables();
 
+
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
   });
   const logger = new Logger();
-
+  logger.debug('Environment variables: ' +  process.env.PORT);
   app.useGlobalInterceptors(new ResponseInterceptor());
   app.useGlobalPipes(new ValidationPipe({
     transform: true,
@@ -27,14 +29,16 @@ async function bootstrap() {
   });
 
   const config = new DocumentBuilder()
-    .setTitle('Application API')
-    .setDescription('api for Application functionality')
+    .setTitle('Application Test')
+    .setDescription('provides API endpoints and middleware for Application functionality')
     .setVersion('1.0')
+    .addTag('Application')
     .addBearerAuth(
       {
         type: 'http',
         description: 'Enter a JWT token to authorize the requests...',
         scheme: 'bearer',
+        
         bearerFormat: 'JWT',
       },
       'JWTBearerAuth',
