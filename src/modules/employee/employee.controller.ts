@@ -139,7 +139,6 @@ export class EmployeeController {
   }
 
   @Get('AllskilledEmployees')
-  @Roles(Role.User)
   @ApiOperation({
     summary: 'Get all Employees of matching skill',
   })
@@ -163,7 +162,6 @@ export class EmployeeController {
   }
 
   @Post('skilledEmployees')
-  @Roles(Role.User)
   @ApiOperation({
   summary: 'Get all Employees of matching skill',
     })
@@ -188,7 +186,6 @@ export class EmployeeController {
   }
 
   @Get('list')
-  @Roles(Role.User)
   @ApiOperation({
     summary: 'Get the list of Employees of matching skill',
   })
@@ -213,7 +210,6 @@ export class EmployeeController {
   }
 
   @Get('Skills')
-  @Roles(Role.User)
   @ApiOperation({
     summary: 'Get all Employees of matching skill',
   })
@@ -235,7 +231,6 @@ export class EmployeeController {
   }
 
   @Get()
-  @Roles(Role.User)
   @ApiOperation({
     summary: 'Get all Employee data',
   })
@@ -258,7 +253,6 @@ export class EmployeeController {
   }
 
   @Get(':EmployeeName')
-  @Roles(Role.User)
   @ApiOperation({
     summary: 'Get specified Employee data',
   })

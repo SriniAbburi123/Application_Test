@@ -9,8 +9,6 @@ import { config } from 'dotenv';
 config();
 validateEnvVariables();
 
-
-
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
   });
@@ -30,7 +28,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Application Test')
-    .setDescription('provides API endpoints and middleware for Application functionality')
+    .setDescription('Provides API endpoints and middleware for Application functionality to gather employee and skill data with different API calls.')
     .setVersion('1.0')
     .addTag('Application')
     .addBearerAuth(

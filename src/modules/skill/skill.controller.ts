@@ -44,7 +44,7 @@ export class SkillController {
     }
   }
 
-  @Put('Update Skill')
+  @Put('updateSkill')
   @Roles(Role.Admin)
   @ApiOperation({
     summary: 'Update specified Skill record',
@@ -93,7 +93,6 @@ export class SkillController {
   }
 
   @Get()
-  @Roles(Role.User)
   @ApiOperation({
     summary: 'Get all Skill data',
   })
