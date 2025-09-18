@@ -1,6 +1,5 @@
-import { constants } from "crypto";
+import { constants } from 'crypto';
 
- 
 import { Transform, Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
@@ -26,7 +25,9 @@ export class GetMatchedEmployeeSkillsResponseDto {
 }
 
 export class GetMatchedEmployeeSkillsResponse {
-  @ApiPropertyOptional({ description: 'Count of the employees matching skills' })
+  @ApiPropertyOptional({
+    description: 'Count of the employees matching skills',
+  })
   @IsNumber()
   @IsNotEmpty()
   count: number;
@@ -36,7 +37,7 @@ export class GetMatchedEmployeeSkillsResponse {
   @ApiPropertyOptional({ description: 'Corresponding employee data' })
   @IsArray()
   @IsObject()
-  employeeData:GetMatchedEmployeeSkillsResponseDto[];
+  employeeData: GetMatchedEmployeeSkillsResponseDto[];
 
   constructor(data) {
     this.count = data.count;

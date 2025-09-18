@@ -1,4 +1,4 @@
-import { constants } from "crypto";
+import { constants } from 'crypto';
 import { Transform, Type } from 'class-transformer';
 import {
   IsArray,
@@ -7,7 +7,7 @@ import {
   IsString,
   IsDate,
 } from 'class-validator';
-import { PartialType } from "@nestjs/mapped-types";
+import { PartialType } from '@nestjs/mapped-types';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Role } from '../../../../models/enums/roles.enum';
 
@@ -18,25 +18,25 @@ export class CreateEmployeeDto {
   name: string;
   @ApiPropertyOptional({ description: 'Designation of the employee' })
   @IsString()
-  position:string;
+  position: string;
   @ApiPropertyOptional({ description: 'Email Address of the employee' })
   @IsString()
-  email:string;
+  email: string;
   @ApiPropertyOptional({ description: 'Array of Skills of the employee' })
   @IsArray()
-  skillIds:[string];
+  skillIds: [string];
   @ApiPropertyOptional({ description: 'Hiredate of the employee' })
   @IsDate()
-  hireDate:Date;
+  hireDate: Date;
   @ApiPropertyOptional({ description: 'Password of the employee' })
   @IsString()
-  password:string
+  password: string;
   @ApiPropertyOptional({ description: 'Performance score of the employee' })
   @IsNumber()
-  engagementScore:number;
+  engagementScore: number;
   @ApiPropertyOptional({ description: 'Roles of the employee' })
   @IsArray()
-  roles:Role[];
+  roles: Role[];
 }
 
 export class UpdateEmployeeDto extends PartialType(CreateEmployeeDto) {}

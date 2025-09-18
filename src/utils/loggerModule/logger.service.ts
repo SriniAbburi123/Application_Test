@@ -5,9 +5,7 @@ import DailyRotateFile from 'winston-daily-rotate-file';
 import { v4 as uuidv4 } from 'uuid';
 import { RequestLog } from './logger.types';
 import { AsyncLocalStorage } from 'async_hooks';
-import {
-  utilities as nestWinstonModuleUtilities,
-} from 'nest-winston';
+import { utilities as nestWinstonModuleUtilities } from 'nest-winston';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -45,7 +43,7 @@ export class LoggerService implements NestLoggerService {
     // };
 
     const developmentFormat = winston.format.combine(
-      winston.format.timestamp({format: 'YYYY-MM-DD HH:mm:ss'}),
+      winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
       nestWinstonModuleUtilities.format.nestLike('Nest', {
         colors: true,
         prettyPrint: true,
@@ -67,7 +65,7 @@ export class LoggerService implements NestLoggerService {
     );
 
     const productionFormat = winston.format.combine(
-      winston.format.timestamp({format: 'YYYY-MM-DD HH:mm:ss'}),
+      winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
       winston.format.ms(),
       winston.format((info) => {
         info.context = this.context;
@@ -77,15 +75,15 @@ export class LoggerService implements NestLoggerService {
       winston.format.json(),
     );
 
-    
     // Create transports array
     const transports: winston.transport[] = [new winston.transports.Console()];
 
     // Only add file transport if we can create the log directory
     try {
-      const logFilePath = process.env.LOG_FILE_PATH || './logs/nestjs-%DATE%.log';
+      const logFilePath =
+        process.env.LOG_FILE_PATH || './logs/nestjs-%DATE%.log';
       const logDir = path.dirname(logFilePath);
-      
+
       // Ensure log directory exists
       if (!fs.existsSync(logDir)) {
         fs.mkdirSync(logDir, { recursive: true });
@@ -117,9 +115,11 @@ export class LoggerService implements NestLoggerService {
 
       // transports.push(rotateFileTransport);
       transports.push(transport);
-      
     } catch (error) {
-      console.warn('Could not initialize file logging, using console only:', error);
+      console.warn(
+        'Could not initialize file logging, using console only:',
+        error,
+      );
     }
 
     this.logger = winston.createLogger({
@@ -193,24 +193,25 @@ export class LoggerService implements NestLoggerService {
 
   logRequest(requestLog: RequestLog) {
     if (process.env.NODE_ENV === 'development') {
-      const { traceId, method, url, duration, statusCode, timestamp, path } = requestLog;
-      
-    //   ${colors.dim('└──')} Trace ID: ${traceId}
-    //   ${colors.dim('└──')} Method: ${colors.bgBlue(method)}
-    //   ${colors.dim('└──')} URL: ${colors.blue(url)}
-    //   ${colors.dim('└──')} Path: ${path}
-    //   ${colors.dim('└──')} Status: ${statusCode}
-    //   ${colors.dim('└──')} Duration: ${colors.bgGreen(duration.toString() + 'ms')}`;
+      const { traceId, method, url, duration, statusCode, timestamp, path } =
+        requestLog;
+
+      //   ${colors.dim('└──')} Trace ID: ${traceId}
+      //   ${colors.dim('└──')} Method: ${colors.bgBlue(method)}
+      //   ${colors.dim('└──')} URL: ${colors.blue(url)}
+      //   ${colors.dim('└──')} Path: ${path}
+      //   ${colors.dim('└──')} Status: ${statusCode}
+      //   ${colors.dim('└──')} Duration: ${colors.bgGreen(duration.toString() + 'ms')}`;
 
       let logMessage = `
     🔍 API Request Details:
 
-        ${('└──')} Trace ID: ${traceId}
-        ${('└──')} Method: \x1b[44m${method}\x1b[0m
-        ${('└──')} URL: \x1b[34m${url}\x1b[0m
-        ${('└──')} Path: ${path}
-        ${('└──')} Status: ${statusCode}
-        ${('└──')} Duration: \x1b[42m${duration.toString() + 'ms'}\x1b[0m`;
+        ${'└──'} Trace ID: ${traceId}
+        ${'└──'} Method: \x1b[44m${method}\x1b[0m
+        ${'└──'} URL: \x1b[34m${url}\x1b[0m
+        ${'└──'} Path: ${path}
+        ${'└──'} Status: ${statusCode}
+        ${'└──'} Duration: \x1b[42m${duration.toString() + 'ms'}\x1b[0m`;
 
       // if (Object.keys(body || {}).length > 0) {
       //   logMessage += `\n${colors.dim('└──')} Body: ${JSON.stringify(body, null, 2)}`;
@@ -224,8 +225,8 @@ export class LoggerService implements NestLoggerService {
       //   logMessage += `\n${colors.dim('└──')} Params: ${JSON.stringify(params, null, 2)}`;
       // }
 
-      logMessage += `\n${('└──')}Timestamp: ${timestamp}`;
-    //   logMessage += `\n${colors.dim('└──')}Timestamp: ${timestamp}`;
+      logMessage += `\n${'└──'}Timestamp: ${timestamp}`;
+      //   logMessage += `\n${colors.dim('└──')}Timestamp: ${timestamp}`;
 
       this.logger.info(logMessage);
     } else {

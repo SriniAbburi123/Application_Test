@@ -5,24 +5,27 @@ import { EmployeeModule } from '../employee/employee.module';
 import { AuthController } from './auth.controller';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
-import { jwtConstants } from './constants';
+import { PassportModule } from '@nestjs/passport';
+import { JwtStrategy } from './jwt.strategy';
 
 @Global()
 @Module({
   imports: [
+    EmployeeModule,
+    PassportModule,
     JwtModule.register({
       global: true,
-      secret: jwtConstants.secret,
-      signOptions: { expiresIn: process.env.JWT_EXPIRE},
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: process.env.JWT_EXPIRE },
     }),
   ],
   providers: [
     AuthService,
+    JwtStrategy,
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
     },
-    AuthService,
   ],
   controllers: [AuthController],
   exports: [AuthService],

@@ -6,7 +6,6 @@ import { EmployeeController } from './employee.controller';
 import { EmployeeService } from './employee.service';
 import { EmployeeAnalyticsService } from './employeeAnalytics.service';
 
-
 @Module({
   imports: [
     MongooseModule.forFeature([
@@ -16,7 +15,6 @@ import { EmployeeAnalyticsService } from './employeeAnalytics.service';
   ],
   controllers: [EmployeeController],
   providers: [EmployeeService, EmployeeAnalyticsService],
-  exports: [EmployeeService],
+  exports: [EmployeeService, EmployeeAnalyticsService],
 })
-
 export class EmployeeModule {}

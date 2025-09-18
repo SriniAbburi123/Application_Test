@@ -1,0 +1,1346 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>application_test documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">application_test documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Injectables</li>
+  <li class="breadcrumb-item" >EmployeeService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/modules/employee/employee.service.ts</code>
+        </p>
+
+
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#logger" >logger</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#addSkillsToEmployee" >addSkillsToEmployee</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#createEmployee" >createEmployee</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#deleteEmployee" >deleteEmployee</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getAllEmployees" >getAllEmployees</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getAllSkilledEmployees" >getAllSkilledEmployees</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getEmployee" >getEmployee</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getEmployeesOfSkill" >getEmployeesOfSkill</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getMatchedEmployees" >getMatchedEmployees</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getSkilledEmployees" >getSkilledEmployees</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#updateEmployee" >updateEmployee</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#updateScore" >updateScore</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(employeeModel: <a href="../classes/Employee.html" target="_self">Model&lt;Employee&gt;</a>, skillModel: <a href="../classes/Skill.html" target="_self">Model&lt;Skill&gt;</a>, employeeAnalyticsService: <a href="../injectables/EmployeeAnalyticsService.html" target="_self">WrapperType&lt;EmployeeAnalyticsService&gt;</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">src/modules/employee/employee.service.ts:19</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>employeeModel</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../classes/Employee.html" target="_self" >Model&lt;Employee&gt;</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>skillModel</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../classes/Skill.html" target="_self" >Model&lt;Skill&gt;</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>employeeAnalyticsService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/EmployeeAnalyticsService.html" target="_self" >WrapperType&lt;EmployeeAnalyticsService&gt;</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="addSkillsToEmployee"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>addSkillsToEmployee</b></span>
+                        <a href="#addSkillsToEmployee"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>addSkillsToEmployee(addSkillsDto: <a href="../classes/AddSkillsEmployeeDto.html" target="_self">AddSkillsEmployeeDto</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="180"
+                                    class="link-to-prism">src/modules/employee/employee.service.ts:180</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>addSkillsDto</td>
+                                            <td>
+                                                            <code><a href="../classes/AddSkillsEmployeeDto.html" target="_self" >AddSkillsEmployeeDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/Employee.html" target="_self" >Promise&lt;Employee&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createEmployee"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>createEmployee</b></span>
+                        <a href="#createEmployee"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>createEmployee(createEmployeeDto: <a href="../classes/CreateEmployeeDto.html" target="_self">CreateEmployeeDto</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="25"
+                                    class="link-to-prism">src/modules/employee/employee.service.ts:25</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>createEmployeeDto</td>
+                                            <td>
+                                                            <code><a href="../classes/CreateEmployeeDto.html" target="_self" >CreateEmployeeDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/Employee.html" target="_self" >Promise&lt;Employee&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="deleteEmployee"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>deleteEmployee</b></span>
+                        <a href="#deleteEmployee"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>deleteEmployee(empName: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="129"
+                                    class="link-to-prism">src/modules/employee/employee.service.ts:129</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>empName</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/Employee.html" target="_self" >Promise&lt;Employee&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getAllEmployees"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getAllEmployees</b></span>
+                        <a href="#getAllEmployees"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getAllEmployees()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="109"
+                                    class="link-to-prism">src/modules/employee/employee.service.ts:109</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/Employee.html" target="_self" >Promise&lt;Employee[]&gt;</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getAllSkilledEmployees"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getAllSkilledEmployees</b></span>
+                        <a href="#getAllSkilledEmployees"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getAllSkilledEmployees()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="52"
+                                    class="link-to-prism">src/modules/employee/employee.service.ts:52</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;GetMatchedEmployeeAllSkillsResponse[]&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getEmployee"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getEmployee</b></span>
+                        <a href="#getEmployee"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getEmployee(empName: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="119"
+                                    class="link-to-prism">src/modules/employee/employee.service.ts:119</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>empName</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/Employee.html" target="_self" >Promise&lt;Employee&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getEmployeesOfSkill"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getEmployeesOfSkill</b></span>
+                        <a href="#getEmployeesOfSkill"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getEmployeesOfSkill(skill: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="140"
+                                    class="link-to-prism">src/modules/employee/employee.service.ts:140</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>skill</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;any&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getMatchedEmployees"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getMatchedEmployees</b></span>
+                        <a href="#getMatchedEmployees"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getMatchedEmployees(empSkill: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="94"
+                                    class="link-to-prism">src/modules/employee/employee.service.ts:94</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>empSkill</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;GetMatchedEmployeeSkillsResponse&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getSkilledEmployees"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getSkilledEmployees</b></span>
+                        <a href="#getSkilledEmployees"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getSkilledEmployees(skillSelectionDto: <a href="../classes/SkillSelectionDto.html" target="_self">SkillSelectionDto</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="76"
+                                    class="link-to-prism">src/modules/employee/employee.service.ts:76</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>skillSelectionDto</td>
+                                            <td>
+                                                            <code><a href="../classes/SkillSelectionDto.html" target="_self" >SkillSelectionDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;GetMatchedEmployeeSkillsResponse&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateEmployee"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>updateEmployee</b></span>
+                        <a href="#updateEmployee"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>updateEmployee(EmpId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, updateEmployeeDto: <a href="../classes/UpdateEmployeeDto.html" target="_self">UpdateEmployeeDto</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="40"
+                                    class="link-to-prism">src/modules/employee/employee.service.ts:40</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>EmpId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>updateEmployeeDto</td>
+                                            <td>
+                                                            <code><a href="../classes/UpdateEmployeeDto.html" target="_self" >UpdateEmployeeDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/Employee.html" target="_self" >Promise&lt;Employee&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateScore"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>updateScore</b></span>
+                        <a href="#updateScore"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>updateScore(updateEmployeeDto: <a href="../classes/UpdateEmployeeDto.html" target="_self">UpdateEmployeeDto</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="163"
+                                    class="link-to-prism">src/modules/employee/employee.service.ts:163</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>updateEmployeeDto</td>
+                                            <td>
+                                                            <code><a href="../classes/UpdateEmployeeDto.html" target="_self" >UpdateEmployeeDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/Employee.html" target="_self" >Promise&lt;Employee&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="logger"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>logger</b></span>
+                        <a href="#logger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Logger(EmployeeService.name)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">src/modules/employee/employee.service.ts:19</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable, Inject, forwardRef, Logger,PipeTransform, NotFoundException, InternalServerErrorException, BadRequestException, ConflictException, Get } from &#x27;@nestjs/common&#x27;;
+import { Model } from &#x27;mongoose&#x27;;
+import { InjectModel } from &#x27;@nestjs/mongoose&#x27;;
+import { EmployeeAnalyticsService } from &#x27;./employeeAnalytics.service&#x27;;
+import { Employee } from &#x27;./models/schemas/EmployeeSchema&#x27;;
+import { Skill } from &#x27;../skill/models/schemas/SkillSchema&#x27;;
+import { CreateEmployeeDto, UpdateEmployeeDto } from &#x27;./models/dtos/createEmployee.dto&#x27;;
+import { GetMatchedEmployeeAllSkillsResponse }  from &#x27;./models/dtos/get-matched-employee-skills-response.dto&#x27;;
+import { 
+  GetMatchedEmployeeSkillsResponseDto,
+  GetMatchedEmployeeSkillsResponse
+ } from &#x27;./models/dtos/get-matched-employee-skills-response.dto&#x27;;
+import { SkillSelectionDto } from &#x27;./models/dtos/skill-selection.dto&#x27;;
+import { AddSkillsEmployeeDto } from &#x27;./models/dtos/addSkillToEmployee.dto&#x27;;
+export type  WrapperType&lt;T&gt; &#x3D; T;
+
+@Injectable()
+export class EmployeeService {
+  private readonly logger &#x3D; new Logger(EmployeeService.name);
+  constructor(@InjectModel(&#x27;Employee&#x27;) private employeeModel:Model&lt;Employee&gt;, @InjectModel(&#x27;Skill&#x27;) private skillModel:Model&lt;Skill&gt;,
+    @Inject(forwardRef(() &#x3D;&gt; EmployeeAnalyticsService))
+    private readonly employeeAnalyticsService: WrapperType&lt;EmployeeAnalyticsService&gt;) {}
+   
+  // Create the employee in mongo db.
+  async createEmployee(createEmployeeDto: CreateEmployeeDto): Promise&lt;Employee&gt; {
+    this.logger.debug(&quot;In the service: EmployeeService.name \t method: createEmployee.name&quot;);
+    const empId &#x3D; createEmployeeDto.name;
+    const existingEmployee &#x3D; await this.employeeModel.findOne({ EmployeeId: empId }).exec();
+    
+    if (existingEmployee) {
+      this.logger.error(&quot;Employee alreadt exists&quot;);
+      return null;
+    }
+    const newEmployee &#x3D; new this.employeeModel(createEmployeeDto);
+    this.logger.debug(&quot;createEmployee: Created Employee Data:&quot;, newEmployee);
+    return newEmployee.save();
+  }
+
+  // Update the employee in db.
+  async updateEmployee(EmpId: string, updateEmployeeDto: UpdateEmployeeDto): Promise&lt;Employee&gt; {
+    this.logger.debug(&quot;In the service: EmployeeService.name \t method: updateEmployee.name&quot;);
+    const filter &#x3D; {EmployeeId: EmpId};
+    const UpdateEmployee &#x3D; await this.employeeModel.findOneAndUpdate(filter, updateEmployeeDto, { new: true }).exec();
+    this.logger.debug(&quot;Updated Employee:&quot;, UpdateEmployee);
+    if (!UpdateEmployee) {
+      this.logger.error(&#x60;updateEmployee: Employee #${EmpId} not found&#x60;);
+    }
+    return UpdateEmployee;
+  }
+
+  // Get All skilled employees from DB using pipeline.
+  async getAllSkilledEmployees(): Promise&lt;GetMatchedEmployeeAllSkillsResponse[]&gt; {
+    this.logger.debug(&quot;In the service: EmployeeService.name \t method: getAllSkilledEmployees.name&quot;);
+    const employeeData:GetMatchedEmployeeAllSkillsResponse[] &#x3D; await this.employeeModel.aggregate([
+      { $unwind: {path: &quot;$EmployeeSkills&quot; }},
+      { $group: { _id: &quot;$EmployeeSkills&quot;,
+        Employees: {
+          $push: {
+            empId: &quot;$EmployeeId&quot;,
+            empName: &quot;$EmployeeName&quot;
+            }
+          }  
+        }
+      },
+      // { $project: { EmpSkill: &quot;$_id&quot;, Employees: 1 } },
+      { $project: { Employees: 1 } },
+      { $set: {EmpSkill: &quot;$_id&quot;}},
+      { $unset: &quot;_id&quot; },
+      { $sort: { EmployeeId: 1 },}, 
+    ]);
+    this.logger.debug(&quot;getAllSkilledEmployees: Skilled Employee Data:&quot;, employeeData);
+    return employeeData;
+  }
+
+  // Get skilled employees from DB using pipeline in a specific format.
+  async getSkilledEmployees(skillSelectionDto:SkillSelectionDto): Promise&lt;GetMatchedEmployeeSkillsResponse&gt; {
+    this.logger.debug(&quot;In the service: EmployeeService.name \t method: getSkilledEmployees.name&quot;);
+    console.log(&quot;Employee Skill: &quot;, skillSelectionDto.empSkill);
+    const skill &#x3D;  skillSelectionDto.empSkill;
+    console.log(&quot;Required SKill:&quot;, skill);
+    const employeeData:GetMatchedEmployeeSkillsResponseDto[] &#x3D; await this.employeeModel.aggregate([
+    { $match: { EmployeeSkills: skill }, },
+    { $project: { EmployeeName: 1, _id: 0 } },
+    { $sort: { EmployeeName: 1 },},
+    ]);
+
+    const count &#x3D; await this.employeeModel.countDocuments({ EmployeeSkills: skill });
+    const data:GetMatchedEmployeeSkillsResponse &#x3D; {count:count, empSkill:skill, employeeData};
+    this.logger.debug(&quot;getSkilledEmployees: Skilled Employee Data:&quot;, data);
+    return data;
+  }
+
+  // Get matched employees of speciied skill from db using pipeline.
+  async getMatchedEmployees(empSkill:string): Promise&lt;GetMatchedEmployeeSkillsResponse&gt; {
+    this.logger.debug(&quot;In the service: EmployeeService.name \t method: getMatchedEmployees.name&quot;);
+    const employeeData:GetMatchedEmployeeSkillsResponseDto[] &#x3D; await this.employeeModel.aggregate([
+      { $match: { EmployeeSkills: empSkill }, },
+      { $project: { EmployeeName: 1, _id: 0 } },
+      { $sort: { EmployeeName: 1 },},
+    ]);
+
+    const count &#x3D; await this.employeeModel.countDocuments({ EmployeeSkills: empSkill });
+    const data:GetMatchedEmployeeSkillsResponse &#x3D; {count, empSkill, employeeData};
+    this.logger.debug(&quot;getMatchedEmployees: Matched Employee Data:&quot;, data);
+    return data;
+  }
+
+  // Get all the data from the Employee collection.
+  async getAllEmployees(): Promise&lt;Employee[]&gt; {
+    this.logger.debug(&quot;In the service: EmployeeService.name \t method: getAllEmployees.name&quot;);
+    const employeeData &#x3D; await this.employeeModel.find().exec();
+    if (!employeeData || employeeData.length &#x3D;&#x3D; 0) {
+      this.logger.error(&#x27;getAllEmployees: Employees data not found!&#x27;);
+    }
+    return employeeData;
+  }
+
+  // Get the data of the specific Employee from db.
+  async getEmployee(empName: string): Promise&lt;Employee&gt; {
+    this.logger.debug(&quot;In the service: EmployeeService.name \t method: getEmployee.name&quot;);
+    const existingEmployee &#x3D; await this.employeeModel.findOne({ EmployeeName: empName }).exec();
+    if (!existingEmployee) {
+      this.logger.error(&#x60;getEmployee: Employee #${empName} not found&#x60;);
+    }
+    return existingEmployee;
+  }
+
+  // Delete the specific employee from collection.
+  async deleteEmployee(empName: string): Promise&lt;Employee&gt; {
+    this.logger.debug(&quot;In the service: EmployeeService.name \t method: deleteEmployee.name&quot;);
+    const filter &#x3D; {EmployeeId: empName};
+    const deletedEmployee &#x3D; await this.employeeModel.findOneAndDelete(filter).exec();
+    if (!deletedEmployee) {
+      this.logger.error(&#x60;deleteEmployee: Employee #${empName} not found&#x60;);
+    } 
+    return deletedEmployee;
+  }
+
+  // Get matched employees of speciied skill from db without pipeline.
+  async getEmployeesOfSkill(skill:string):Promise&lt;any&gt; { 
+    this.logger.debug(&quot;In the service: EmployeeService.name \t method: getEmployeesOfSkill.name&quot;);
+    const employeesOfSkill &#x3D; await this.employeeModel.find({ EmployeeSkills: skill }).exec();
+    const count &#x3D; await this.employeeModel.countDocuments({ EmployeeSkills: skill });
+    const employeesOutput: any[] &#x3D; [];
+
+    for (const user of employeesOfSkill) {
+      // this.logger.debug( &#x27;Count:&#x27; + count, &#x27; Id: &#x27; + user.Name, &#x27;Name: &#x27;);
+      const userJson &#x3D; {
+        &#x27;employeeName&#x27;: user.Name,
+      }
+      employeesOutput.push(userJson);
+      this.logger.debug(&quot;getEmployeesOfSkill: Skills Response: &quot;, employeesOutput);
+    }
+    const data &#x3D; [{
+      Skill: skill,
+      Count: count,
+      Employees: employeesOutput,
+    }]
+    return data;
+  }
+
+  // Caluclate the engagement score and update the score field of the corresponding employee.
+  async updateScore(updateEmployeeDto: UpdateEmployeeDto): Promise&lt;Employee&gt; {
+    this.logger.debug(&quot;In the service: EmployeeService.name \t method: updateScore.name&quot;);
+    const empName &#x3D; updateEmployeeDto.name;
+    const filter &#x3D; {EmployeeName: empName};
+    // Caluclate the engagement score
+    const score &#x3D; this.employeeAnalyticsService.getEngagementScore(updateEmployeeDto);
+    this.logger.debug(&quot;updateScore: Employee score: &quot;, score);
+    // Update the employee record with the score.
+    const updateEmployee &#x3D; await this.employeeModel.findByIdAndUpdate(filter, { $set: { EngagementScore: score }}).exec();
+    this.logger.debug(&#x60;updateScore: Updated Employee #${updateEmployee}&#x60;);
+    if (!updateEmployee) {
+      this.logger.error(&#x60;updateScore: Employee #${empName} not found&#x60;);
+    }
+    return updateEmployee;
+  }
+
+  // Add the specified skills to the corresponding Employee.
+  async addSkillsToEmployee(addSkillsDto:AddSkillsEmployeeDto): Promise&lt;Employee&gt; {
+    this.logger.debug(&quot;In the service: EmployeeService.name \t method: addSkillsToEmployee.name&quot;);
+    const empId &#x3D; addSkillsDto.empId;
+    const skills &#x3D; addSkillsDto.skills;
+    const employeeFilter &#x3D; {_id: empId};
+    for (const skill of skills) {
+      const skillFilter &#x3D; {name: skill};
+      // Check the skills exist in Skill documents. Return if it doesn&#x27;t exist.
+      const skillsExist &#x3D; await this.skillModel.findOne(skillFilter).exec();
+      if (!skillsExist) {
+        this.logger.error(&#x60;addSkillsToEmployee: Skill #${skill} not found&#x60;);
+        return null;
+      }
+    }
+    // Update the employee with the skills. 
+    const updatedEmployee &#x3D; await this.employeeModel.findByIdAndUpdate(employeeFilter, { $set: { skill: skills }}).exec();
+    this.logger.debug(&#x60;Updated Employee #${updatedEmployee}&#x60;);
+    if (!updatedEmployee) {
+      this.logger.error(&#x60;updatedEmployee: Error in updating the employee record Employee #${empId}&#x60;);
+    }
+    return updatedEmployee;
+  }
+
+  
+}</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'EmployeeService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

@@ -12,8 +12,12 @@ export class ResponseInterceptor implements NestInterceptor {
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const { statusCode } = context.switchToHttp().getResponse();
-    return next.handle().pipe(tap((data) => {
-      this.logger.log(`Status[${statusCode}] ResponseBody-Type[${typeof(data)}]`);
-    }));
+    return next.handle().pipe(
+      tap((data) => {
+        this.logger.log(
+          `Status[${statusCode}] ResponseBody-Type[${typeof data}]`,
+        );
+      }),
+    );
   }
 }

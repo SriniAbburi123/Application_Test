@@ -11,61 +11,69 @@ import { EmployeeModule } from './modules/employee/employee.module';
 import { EmployeeAnalyticsModule } from './modules//employee/employeeAnalytics.module';
 import { SkillModule } from './modules/skill/skill.module';
 import { LoggerMiddleware } from './utils/loggerModule/logger.middleware';
- 
+import { HealthModule } from './health/health.module';
+
 function getKey(key: string): Buffer {
   return crypto.createHash('sha256').update(key).digest();
 }
 
 function decrypt(text: string): string {
-  const secretKey = process.env.SECRET_KEY || 'mongodburlencryptpasswordprovide';
+  const secretKey =
+    process.env.SECRET_KEY || 'mongodburlencryptpasswordprovide';
   const [ivText, encryptedText] = text.split(':');
   const iv = Buffer.from(ivText, 'hex');
   const encrypted = Buffer.from(encryptedText, 'hex');
-  const decipher = crypto.createDecipheriv('aes-256-cbc', getKey(secretKey), iv);
+  const decipher = crypto.createDecipheriv(
+    'aes-256-cbc',
+    getKey(secretKey),
+    iv,
+  );
   let decrypted = decipher.update(encrypted);
   decrypted = Buffer.concat([decrypted, decipher.final()]);
-  console.log(decrypted.toString(),"====================decrypted string");
+  console.log(decrypted.toString(), '====================decrypted string');
   return decrypted.toString().trim();
 }
 
-@Module({imports: [
-  AuthModule,
-  EmployeeModule,
-  SkillModule,
-  EmployeeAnalyticsModule,
-  MongooseModule.forRoot('mongodb://localhost:27017',{
-  dbName: 'employeedb'}),
-  ThrottlerModule.forRoot({
-    throttlers: [
-      {
-      ttl: 2,
-      limit: 100,
-      }
-    ],
-  }),
-  ConfigModule.forRoot({
-    isGlobal: true, // Makes the configuration available globally
+@Module({
+  imports: [
+    AuthModule,
+    EmployeeModule,
+    SkillModule,
+    EmployeeAnalyticsModule,
+    MongooseModule.forRoot('mongodb://localhost:27017', {
+      dbName: 'Newemployeedb',
     }),
-],
-   
+    ThrottlerModule.forRoot({
+      throttlers: [
+        {
+          ttl: 2,
+          limit: 100,
+        },
+      ],
+    }),
+    ConfigModule.forRoot({
+      isGlobal: true, // Makes the configuration available globally
+    }),
+    HealthModule,
+  ],
+
   providers: [
-  {
-    provide: APP_GUARD,
-     useClass: ThrottlerGuard,
-  },
-  {
-    provide: APP_GUARD,
-     useClass: AuthGuard,
-  },
-  {
-    provide: APP_GUARD,
-     useClass: RolesGuard,
-  },
-  Logger,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+    Logger,
   ],
 })
-
-export class AppModule implements NestModule{
+export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(LoggerMiddleware).forRoutes('*');
   }

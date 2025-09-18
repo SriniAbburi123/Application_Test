@@ -10,15 +10,16 @@ config();
 validateEnvVariables();
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-  });
+  const app = await NestFactory.create(AppModule, {});
   const logger = new Logger();
-  logger.debug('Environment variables: ' +  process.env.PORT);
+  logger.debug('Environment variables: ' + process.env.PORT);
   app.useGlobalInterceptors(new ResponseInterceptor());
-  app.useGlobalPipes(new ValidationPipe({
-    transform: true,
-    whitelist: true,
-  }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+    }),
+  );
 
   app.enableVersioning({
     type: VersioningType.HEADER,
@@ -28,7 +29,9 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Application Test')
-    .setDescription('Provides API endpoints and middleware for Application functionality to gather employee and skill data with different API calls.')
+    .setDescription(
+      'Provides API endpoints and middleware for Application functionality to gather employee and skill data with different API calls.',
+    )
     .setVersion('1.0')
     .addTag('Application')
     .addBearerAuth(
@@ -36,22 +39,20 @@ async function bootstrap() {
         type: 'http',
         description: 'Enter a JWT token to authorize the requests...',
         scheme: 'bearer',
-        
+
         bearerFormat: 'JWT',
       },
       'JWTBearerAuth',
     )
-    .addGlobalParameters(
-      {
-        name: 'x-api-version',
-        in: 'header',
-        required: true,
-        description: 'api version is required',
-        allowEmptyValue: false,
-        // example: '1',
-        schema: { type: 'string', default: '1' },
-      },
-    )
+    .addGlobalParameters({
+      name: 'x-api-version',
+      in: 'header',
+      required: true,
+      description: 'api version is required',
+      allowEmptyValue: false,
+      // example: '1',
+      schema: { type: 'string', default: '1' },
+    })
     .addSecurityRequirements('JWTBearerAuth')
     .build();
 

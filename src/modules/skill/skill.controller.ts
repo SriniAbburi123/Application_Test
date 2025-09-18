@@ -1,7 +1,24 @@
-import { Body, Controller, Logger, HttpStatus, Param, Delete, Get, Post, Put, Res, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Logger,
+  HttpStatus,
+  Param,
+  Delete,
+  Get,
+  Post,
+  Put,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { Role } from '../../models/enums/roles.enum';
-import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { SkillService } from './skill.service';
 import { CreateSkillDto, UpdateSkillDto } from './models/dtos/createSkill.dto';
 import { RolesGuard } from '../auth/roles.guard';
@@ -12,7 +29,7 @@ import { RolesGuard } from '../auth/roles.guard';
 @Controller('Skill')
 export class SkillController {
   private readonly logger = new Logger(SkillController.name);
-  constructor(private readonly skillService: SkillService) { }
+  constructor(private readonly skillService: SkillService) {}
 
   @Post('createSkill')
   @Roles(Role.Admin)
@@ -34,13 +51,14 @@ export class SkillController {
       // console.log(" Returned from the service method", newEmployee);
       return response.status(HttpStatus.CREATED).json({
         message: 'Skill has been added successfully',
-        newSkill});
+        newSkill,
+      });
     } catch (err) {
-        return response.status(HttpStatus.BAD_REQUEST).json({
+      return response.status(HttpStatus.BAD_REQUEST).json({
         statusCode: 400,
         message: 'Error: Skill not Created!',
-        error: 'Bad Request'
-        });
+        error: 'Bad Request',
+      });
     }
   }
 
@@ -57,13 +75,14 @@ export class SkillController {
     status: 400,
     description: 'Skill not found',
   })
-  async updateSkill(@Res() response, @Body() updateSkillDto: UpdateSkillDto){
+  async updateSkill(@Res() response, @Body() updateSkillDto: UpdateSkillDto) {
     try {
       const updatedSkill = await this.skillService.updateSkill(updateSkillDto);
       return response.status(HttpStatus.OK).json({
-      message: 'Skill updated successfully',
-      updatedSkill});
-    }catch (err) {
+        message: 'Skill updated successfully',
+        updatedSkill,
+      });
+    } catch (err) {
       return response.status(err).json(err);
     }
   }
@@ -81,13 +100,14 @@ export class SkillController {
     status: 400,
     description: 'Skill not found',
   })
-  async deleteSkill(@Res() response, @Param('Skill') skill: string){
+  async deleteSkill(@Res() response, @Param('Skill') skill: string) {
     try {
       const deletedSkill = await this.skillService.deleteSkill(skill);
       return response.status(HttpStatus.OK).json({
-      message: 'Skill deleted successfully',
-      deletedSkill,});
-    }catch (err) {
+        message: 'Skill deleted successfully',
+        deletedSkill,
+      });
+    } catch (err) {
       return response.status(err).json(err);
     }
   }
@@ -108,10 +128,11 @@ export class SkillController {
     try {
       const skillData = await this.skillService.getAllSkills();
       return response.status(HttpStatus.OK).json({
-      message: 'All Employees data found successfully',skillData});
+        message: 'All Employees data found successfully',
+        skillData,
+      });
     } catch (err) {
       return response.status(err).json(err);
     }
   }
 }
-

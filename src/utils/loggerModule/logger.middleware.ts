@@ -19,7 +19,7 @@ export class LoggerMiddleware implements NestMiddleware {
     const { method, originalUrl, body, headers, ip } = req;
     const authToken = req.get('Authorization');
     this.logger.log(
-      `Request object: [ Method[${method}] URL[${headers.host}${originalUrl}] JWT[${authToken? 'found': 'not found'}] Body[${JSON.stringify(
+      `Request object: [ Method[${method}] URL[${headers.host}${originalUrl}] JWT[${authToken ? 'found' : 'not found'}] Body[${JSON.stringify(
         body,
       )}] IP[${ip}]]`,
     );
@@ -35,7 +35,8 @@ export class LoggerMiddleware implements NestMiddleware {
         body: process.env.NODE_ENV === 'development' ? req.body : undefined,
         query: process.env.NODE_ENV === 'development' ? req.query : undefined,
         params: process.env.NODE_ENV === 'development' ? req.params : undefined,
-        headers: process.env.NODE_ENV === 'development' ? req.headers : undefined,
+        headers:
+          process.env.NODE_ENV === 'development' ? req.headers : undefined,
         timestamp: new Date().toISOString(),
         path: req.path,
       };

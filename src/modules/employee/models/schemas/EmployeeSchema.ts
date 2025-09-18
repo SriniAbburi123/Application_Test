@@ -5,7 +5,7 @@ export type EmployeeDocument = HydratedDocument<Employee>;
 
 @Schema()
 export class Employee extends Document {
-  @Prop({ type: String, isRequired: true, unique:true })
+  @Prop({ type: String, isRequired: true, unique: true })
   Name: string;
   @Prop({ type: String })
   Position: string;
@@ -16,10 +16,10 @@ export class Employee extends Document {
   Email: string;
   @Prop({ type: Date })
   HireDate: Date;
-  @Prop({ type: String, isRequired: true})
+  @Prop({ type: String, isRequired: true })
   Password: string;
-  @Prop({ type: Number})
+  @Prop({ type: Number })
   EngagementScore: number;
-};
+}
 
 export const EmployeeSchema = SchemaFactory.createForClass(Employee);
