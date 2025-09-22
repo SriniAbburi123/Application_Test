@@ -1,4 +1,6 @@
-// server.js  -- Entry point to the application.
+// main.js  -- Entry point to the application.
+// Import this first!
+import "./instrument";
 import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -10,7 +12,7 @@ config();
 validateEnvVariables();
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {});
+  const app = await NestFactory.create(AppModule, {snapshot: true});
   const logger = new Logger();
   logger.debug('Environment variables: ' + process.env.PORT);
   app.useGlobalInterceptors(new ResponseInterceptor());

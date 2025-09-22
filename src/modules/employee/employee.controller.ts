@@ -36,6 +36,12 @@ import { AddSkillsEmployeeDto } from './models/dtos/addSkillToEmployee.dto';
 export class EmployeeController {
   private readonly logger = new Logger(EmployeeController.name);
   constructor(private readonly employeeService: EmployeeService) {}
+
+  @Get("debug-sentry")
+  getError() {
+    throw new Error("My first Sentry error!");
+  }
+  
   @Post('createEmployee')
   @Roles(Role.Admin)
   @ApiBody({ type: CreateEmployeeDto })

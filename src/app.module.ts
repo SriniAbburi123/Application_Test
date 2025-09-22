@@ -1,3 +1,7 @@
+import { SentryModule } from "@sentry/nestjs/setup";
+import { SentryGlobalFilter } from "@sentry/nestjs/setup";
+import { DevtoolsModule } from "@nestjs/devtools-integration";
+import { APP_FILTER } from "@nestjs/core";
 import { Logger, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
@@ -36,6 +40,15 @@ function decrypt(text: string): string {
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true, // Ensures the config is available globally
+    }),
+     
+    // DevtoolsModule.register({
+    //   http: process.env.NODE_ENV !== 'production',
+    // }),
+  
+    // SentryModule.forRoot(),
     AuthModule,
     EmployeeModule,
     SkillModule,
@@ -51,13 +64,15 @@ function decrypt(text: string): string {
         },
       ],
     }),
-    ConfigModule.forRoot({
-      isGlobal: true, // Makes the configuration available globally
-    }),
+    
     HealthModule,
   ],
 
   providers: [
+    {
+      provide: APP_FILTER,
+      useClass: SentryGlobalFilter,
+    },  
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
@@ -75,6 +90,6 @@ function decrypt(text: string): string {
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleware).forRoutes('*');
+    consumer.apply(LoggerMiddleware).forRoutes('/*splat');
   }
 }

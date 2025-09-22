@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Logger,
   Get,
   HttpCode,
   HttpStatus,
@@ -14,6 +15,7 @@ import { Public } from './decorators/public.decorator';
 
 @Controller('auth')
 export class AuthController {
+  private readonly logger = new Logger(AuthGuard.name);
   constructor(private authService: AuthService) {}
 
   @Public()
