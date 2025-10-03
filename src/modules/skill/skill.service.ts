@@ -19,7 +19,7 @@ export class SkillService {
 
   // Create the skill in mongo db.
   async createSkill(createSkillDto: CreateSkillDto): Promise<Skill> {
-    const skillName = createSkillDto.name;
+    const skillName = createSkillDto.Name;
     const existingSkill = await this.skillModel
       .findOne({ Name: skillName })
       .exec();
@@ -36,7 +36,7 @@ export class SkillService {
 
   // Update the Skill in db.
   async updateSkill(updateSkillDto: UpdateSkillDto): Promise<Skill> {
-    const skillName = updateSkillDto.name;
+    const skillName = updateSkillDto.Name;
     const filter = { name: skillName };
     const existingSkill = await this.skillModel
       .findOneAndUpdate(filter, updateSkillDto, { new: true })

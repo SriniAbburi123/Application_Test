@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Employee, EmployeeSchema } from './models/schemas/EmployeeSchema';
+import { Employee, EmployeeSchema } from '../employee/models/schemas/EmployeeSchema';
 import { Skill, SkillSchema } from '../skill/models/schemas/SkillSchema';
-import { EmployeeService } from './employee.service';
+import { EmployeeService } from '../employee/employee.service';
 import { EmployeeAnalyticsService } from './employeeAnalytics.service';
 
 @Module({
@@ -13,5 +13,7 @@ import { EmployeeAnalyticsService } from './employeeAnalytics.service';
     ]),
   ],
   providers: [EmployeeService, EmployeeAnalyticsService],
+  exports: [EmployeeAnalyticsService],
+
 })
 export class EmployeeAnalyticsModule {}

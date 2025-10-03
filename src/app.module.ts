@@ -12,7 +12,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { AuthGuard } from './modules/auth/auth.guard';
 import { RolesGuard } from './modules/auth/roles.guard';
 import { EmployeeModule } from './modules/employee/employee.module';
-import { EmployeeAnalyticsModule } from './modules//employee/employeeAnalytics.module';
+import { EmployeeAnalyticsModule } from './modules/employeeAnalytics/employeeAnalytics.module';
 import { SkillModule } from './modules/skill/skill.module';
 import { LoggerMiddleware } from './utils/loggerModule/logger.middleware';
 import { HealthModule } from './health/health.module';

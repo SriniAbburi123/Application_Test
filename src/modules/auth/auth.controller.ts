@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
+import { SignInDto } from '../employee/models/dtos/signIn.dto';
 import { Public } from './decorators/public.decorator';
 
 @Controller('auth')
@@ -20,18 +21,19 @@ export class AuthController {
 
   @Public()
   @HttpCode(HttpStatus.OK)
-  @Post('auth/login')
-  signIn(@Body() signInDto: Record<string, any>) {
+  @Post('/login')
+  signIn(@Body() signInDto: SignInDto) {
+    console.log("In the auth controller login handler");
     return this.authService.signIn(signInDto.username, signInDto.password);
   }
 
   @UseGuards(AuthGuard)
-  @Get('auth/profile')
+  @Get('/profile')
   getProfile(@Request() req) {
     return req.user;
   }
 
-  @Post('auth/logout')
+  @Post('/logout')
   async logout(@Request() req) {
     return req.logout();
   }

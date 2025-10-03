@@ -67,7 +67,7 @@ export class EmployeeController {
     try {
       const newEmployee =
         await this.employeeService.createEmployee(createEmployeeDto);
-      // console.log(" Returned from the service method", newEmployee);
+      
       return response.status(HttpStatus.CREATED).json({
         message: 'Employee has been added successfully',
         newEmployee,
@@ -89,12 +89,12 @@ export class EmployeeController {
   })
   @ApiResponse({
     status: 200,
-    description: 'Employee added successfully',
+    description: 'Skills added to the employee successfully',
     type: CreateEmployeeDto,
   })
   @ApiResponse({
     status: 400,
-    description: 'Failed to add the employee',
+    description: 'Failed to add skills to the employee',
   })
   async addSkillsToEmployee(
     @Res() response,
@@ -104,17 +104,17 @@ export class EmployeeController {
       'In the service: EmployeeController.name \t method: addSkillsToEmployee.name',
     );
     try {
-      const newEmployee =
+      const updatedEmployee =
         await this.employeeService.addSkillsToEmployee(addSkillsEmployeeDto);
       // console.log(" Returned from the service method", newEmployee);
       return response.status(HttpStatus.CREATED).json({
-        message: 'Employee has been added successfully',
-        newEmployee,
+        message: 'Employee Skills has been updated successfully',
+        updatedEmployee,
       });
     } catch (err) {
       return response.status(HttpStatus.BAD_REQUEST).json({
         statusCode: 400,
-        message: 'Error: Employee not Created!',
+        message: 'Error: Skills not added to the Employee',
         error: 'Bad Request',
       });
     }
@@ -160,16 +160,14 @@ export class EmployeeController {
     }
   }
 
-  @Put('/UpdateScore')
+  @Get('UpdateScore/:EmployeeName')
   @Roles(Role.Admin)
-  @ApiBody({ type: UpdateEmployeeDto })
   @ApiOperation({
     summary: 'Update the score of the employee)',
   })
   @ApiResponse({
     status: 200,
     description: 'Score updated successfully',
-    type: UpdateEmployeeDto,
   })
   @ApiResponse({
     status: 400,
@@ -177,19 +175,18 @@ export class EmployeeController {
   })
   async updateScore(
     @Res() response,
-    @Body() updateEmployeeDto: UpdateEmployeeDto,
+    @Param('EmployeeName') empName: string,
   ) {
     this.logger.debug(
       'In the service: EmployeeController.name \t method: updateScore.name',
-    );
+      'In the service: EmployeeController:  \t method: updateScore' + empName);
     try {
-      const existingSkill =
-        await this.employeeService.updateScore(updateEmployeeDto);
+      await this.employeeService.updateScore(empName);
       return response.status(HttpStatus.OK).json({
         message: 'Employee has been successfully updated',
-        existingSkill,
-      });
-    } catch (err) {
+      }) 
+    }
+    catch (err) {
       return response.status(HttpStatus.BAD_REQUEST).json({
         statusCode: 400,
         message: 'Error: Skill Not Updated!',

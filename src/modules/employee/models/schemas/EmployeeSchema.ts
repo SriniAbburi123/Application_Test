@@ -10,7 +10,7 @@ export class Employee extends Document {
   @Prop({ type: String })
   Position: string;
   // @Prop({ type: Schema.Types.ObjectId, ref: 'Skill'})
-  @Prop({ type: String, ref: 'Skill' })
+  @Prop({ type: Array, ref: 'Skill' })
   Skills: [string];
   @Prop({ type: String })
   Email: string;
@@ -20,6 +20,8 @@ export class Employee extends Document {
   Password: string;
   @Prop({ type: Number })
   EngagementScore: number;
+  @Prop({ type: Array })
+  Roles: [string];
 }
 
 export const EmployeeSchema = SchemaFactory.createForClass(Employee);

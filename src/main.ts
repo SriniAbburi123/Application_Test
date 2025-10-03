@@ -1,20 +1,22 @@
 // main.js  -- Entry point to the application.
 // Import this first!
 import "./instrument";
+import { validateEnvVariables } from './utils/env.validator';
+import { config } from 'dotenv';
+config();
+validateEnvVariables();
 import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ResponseInterceptor } from './utils/loggerModule/logger.interceptor';
 import { AppModule } from './app.module';
-import { validateEnvVariables } from './utils/env.validator';
-import { config } from 'dotenv';
-config();
-validateEnvVariables();
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {snapshot: true});
   const logger = new Logger();
-  logger.debug('Environment variables: ' + process.env.PORT);
+  logger.debug('Port #: ' + process.env.PORT);
+  // logger.debug('Secret Key: ' + process.env.JWT_SECRET);
+  logger.debug('Expiry Duration: ' + process.env.JWT_EXPIRE);
+  const app = await NestFactory.create(AppModule, {snapshot: true});
   app.useGlobalInterceptors(new ResponseInterceptor());
   app.useGlobalPipes(
     new ValidationPipe({

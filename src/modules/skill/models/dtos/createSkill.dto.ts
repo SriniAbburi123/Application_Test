@@ -7,9 +7,9 @@ export class CreateSkillDto {
   @ApiProperty({ description: 'Skill Name' })
   @IsString()
   @IsNotEmpty()
-  name: string;
+  Name: string;
   @ApiPropertyOptional({ description: 'Skill description' })
   @IsString()
-  description: string;
+  Description: string;
 }
 export class UpdateSkillDto extends PartialType(CreateSkillDto) {}

@@ -26,7 +26,7 @@ export class AuthGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
-
+    this.logger.debug(' Authorization Token: ' + token);
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
@@ -40,6 +40,8 @@ export class AuthGuard implements CanActivate {
           const payload = await this.jwtService.verifyAsync(token, {
             secret: process.env.JWT_SECRET,
           });
+          this.logger.log(` User Authentication successful. Payload: [Name: ${payload.username}, Email: ${payload.email}, Roles: ${payload.roles}, Position: ${payload.position}]`,
+      );
           request['user'] = payload;
           this.logger.debug(`Token decoded successfully.`);
         } catch (error: unknown) {
@@ -57,16 +59,17 @@ export class AuthGuard implements CanActivate {
       // throw new UnauthorizedException(this.authService.convertLang('errors.auth.token', lang));
       throw new UnauthorizedException();
     }
-    this.logger.log(` Access Token Extracted from header.`);
     try {
+      // this.logger.debug(' Authorization Token: ' + token);
       const payload = await this.jwtService.verifyAsync(token, {
-        secret: jwtConstants.secret,
+        secret: process.env.JWT_SECRET,
       });
       // 💡 We're assigning the payload to the request object here
       // so that we can access it in our route handlers
+      this.logger.debug("User payload: " + payload);
       request['user'] = payload;
       this.logger.log(
-        ` User Authentication successful. Payload: [Name: ${payload.name}, Email: ${payload.email}, Type: ${payload.type}]`,
+        ` User Authentication successful. Payload: [Name: ${payload.username}, Email: ${payload.email}, Roles: ${payload.roles}, Position: ${payload.position}]`,
       );
     } catch (error: unknown) {
       this.logger.error(

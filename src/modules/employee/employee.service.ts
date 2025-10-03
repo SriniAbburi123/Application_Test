@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { EmployeeAnalyticsService } from './employeeAnalytics.service';
+import { EmployeeAnalyticsService } from '../employeeAnalytics/employeeAnalytics.service';
 import { Employee } from './models/schemas/EmployeeSchema';
 import { Skill } from '../skill/models/schemas/SkillSchema';
 import {
@@ -26,7 +26,6 @@ import {
 } from './models/dtos/get-matched-employee-skills-response.dto';
 import { SkillSelectionDto } from './models/dtos/skill-selection.dto';
 import { AddSkillsEmployeeDto } from './models/dtos/addSkillToEmployee.dto';
-export type WrapperType<T> = T;
 
 @Injectable()
 export class EmployeeService {
@@ -34,8 +33,8 @@ export class EmployeeService {
   constructor(
     @InjectModel('Employee') private employeeModel: Model<Employee>,
     @InjectModel('Skill') private skillModel: Model<Skill>,
-    @Inject(forwardRef(() => EmployeeAnalyticsService))
-    private readonly employeeAnalyticsService: WrapperType<EmployeeAnalyticsService>,
+    @Inject(forwardRef(() =>  EmployeeAnalyticsService))
+    private readonly employeeAnalyticsService:EmployeeAnalyticsService,
   ) {}
 
   // Create the employee in mongo db.
@@ -45,35 +44,39 @@ export class EmployeeService {
     this.logger.debug(
       'In the service: EmployeeService.name \t method: createEmployee.name',
     );
-    const empId = createEmployeeDto.name;
+    const empName = createEmployeeDto.Name;
+
+
     const existingEmployee = await this.employeeModel
-      .findOne({ EmployeeId: empId })
+      .findOne({ Name: empName })
       .exec();
 
     if (existingEmployee) {
-      this.logger.error('Employee alreadt exists');
+      this.logger.error('Employee already exists');
       return null;
     }
+    console.log('Create Employee DTO:', createEmployeeDto);
     const newEmployee = new this.employeeModel(createEmployeeDto);
+
     this.logger.debug('createEmployee: Created Employee Data:', newEmployee);
     return newEmployee.save();
   }
 
   // Update the employee in db.
   async updateEmployee(
-    EmpId: string,
+    EmpName: string,
     updateEmployeeDto: UpdateEmployeeDto,
   ): Promise<Employee> {
     this.logger.debug(
       'In the service: EmployeeService.name \t method: updateEmployee.name',
     );
-    const filter = { EmployeeId: EmpId };
+    const filter = { Name: EmpName };
     const UpdateEmployee = await this.employeeModel
       .findOneAndUpdate(filter, updateEmployeeDto, { new: true })
       .exec();
     this.logger.debug('Updated Employee:', UpdateEmployee);
     if (!UpdateEmployee) {
-      this.logger.error(`updateEmployee: Employee #${EmpId} not found`);
+      this.logger.error('updateEmployee: Employee ${EmpName} not found');
     }
     return UpdateEmployee;
   }
@@ -184,11 +187,14 @@ export class EmployeeService {
     this.logger.debug(
       'In the service: EmployeeService.name \t method: getEmployee.name',
     );
+     
     const existingEmployee = await this.employeeModel
-      .findOne({ EmployeeName: empName })
+      .findOne({ Name: empName })
       .exec();
+    console.log('Existing Employee: ', existingEmployee );
+    console.log('Existing Employee Id : ', JSON.stringify(existingEmployee._id ));
     if (!existingEmployee) {
-      this.logger.error(`getEmployee: Employee #${empName} not found`);
+      this.logger.error(`getEmployee: Employee ${empName} not found`);
     }
     return existingEmployee;
   }
@@ -243,25 +249,31 @@ export class EmployeeService {
   }
 
   // Caluclate the engagement score and update the score field of the corresponding employee.
-  async updateScore(updateEmployeeDto: UpdateEmployeeDto): Promise<Employee> {
+  async updateScore(empName: string) {
     this.logger.debug(
       'In the service: EmployeeService.name \t method: updateScore.name',
     );
-    const empName = updateEmployeeDto.name;
-    const filter = { EmployeeName: empName };
-    // Caluclate the engagement score
-    const score =
-      this.employeeAnalyticsService.getEngagementScore(updateEmployeeDto);
-    this.logger.debug('updateScore: Employee score: ', score);
+     this.logger.debug(
+      'In the service: EmployeeService.UpdateScore \t method: Emp Name: ' + empName);
+
+    // Invoke GetEngagmentScore method to Caluclate the engagement score 
+    // and invoke the employee service method UpdateEmployeeScore
+    this.employeeAnalyticsService.getEngagementScore(empName);
+  }
+
+ async UpdateEmployeeScore(score: number, empName: string):Promise<void> {
+    this.logger.debug(
+      'In the service: EmployeeService.name \t method: updateScore.name',
+    );
+    const filter = { Name: empName };
     // Update the employee record with the score.
     const updateEmployee = await this.employeeModel
-      .findByIdAndUpdate(filter, { $set: { EngagementScore: score } })
+      .findOneAndUpdate(filter, { $set: { EngagementScore: score } })
       .exec();
-    this.logger.debug(`updateScore: Updated Employee #${updateEmployee}`);
+    this.logger.debug(`updateEmployeeScore: Updated Employee score`)
     if (!updateEmployee) {
-      this.logger.error(`updateScore: Employee #${empName} not found`);
-    }
-    return updateEmployee;
+      this.logger.error(`updateEmployeeScore: Employee #${empName} not found`);
+    } 
   }
 
   // Add the specified skills to the corresponding Employee.
@@ -271,11 +283,13 @@ export class EmployeeService {
     this.logger.debug(
       'In the service: EmployeeService.name \t method: addSkillsToEmployee.name',
     );
-    const empId = addSkillsDto.empId;
-    const skills = addSkillsDto.skills;
-    const employeeFilter = { _id: empId };
+    const empName = addSkillsDto.Name;
+    const skills = addSkillsDto.Skills;
+    this.logger.debug("Employee Name:" + empName + "Skills to be added" + skills);
+    const employeeFilter = { Name: empName };
+    
     for (const skill of skills) {
-      const skillFilter = { name: skill };
+      const skillFilter = { Name: skill };
       // Check the skills exist in Skill documents. Return if it doesn't exist.
       const skillsExist = await this.skillModel.findOne(skillFilter).exec();
       if (!skillsExist) {
@@ -283,14 +297,23 @@ export class EmployeeService {
         return null;
       }
     }
+    
+    this.logger.debug("Updating the user" );
+    const currentEmployee = await this.employeeModel.findOne(employeeFilter).exec();
+    console.log("Current Skills:" + currentEmployee.Skills);
+    const currentSkills = currentEmployee.Skills
+    const newSkills = currentSkills.concat(skills);
+    this.logger.debug("New Skills:" + newSkills);
+
+  
     // Update the employee with the skills.
     const updatedEmployee = await this.employeeModel
-      .findByIdAndUpdate(employeeFilter, { $set: { skill: skills } })
+    .findOneAndUpdate(employeeFilter, { $set: { Skills: newSkills } })
       .exec();
     this.logger.debug(`Updated Employee #${updatedEmployee}`);
     if (!updatedEmployee) {
       this.logger.error(
-        `updatedEmployee: Error in updating the employee record Employee #${empId}`,
+        `updatedEmployee: Error in updating the employee record Employee #${empName}`,
       );
     }
     return updatedEmployee;
