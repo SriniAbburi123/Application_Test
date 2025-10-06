@@ -127,13 +127,13 @@ export class EmployeeService {
     console.log('Required SKill:', skill);
     const employeeData: GetMatchedEmployeeSkillsResponseDto[] =
       await this.employeeModel.aggregate([
-        { $match: { EmployeeSkills: skill } },
-        { $project: { EmployeeName: 1, _id: 0 } },
-        { $sort: { EmployeeName: 1 } },
+        { $match: { Skills: skill } },
+        { $project: { Name: 1, _id: 0 } },
+        { $sort: { Name: 1 } },
       ]);
 
     const count = await this.employeeModel.countDocuments({
-      EmployeeSkills: skill,
+      Skills: skill,
     });
     const data: GetMatchedEmployeeSkillsResponse = {
       count: count,
@@ -153,13 +153,13 @@ export class EmployeeService {
     );
     const employeeData: GetMatchedEmployeeSkillsResponseDto[] =
       await this.employeeModel.aggregate([
-        { $match: { EmployeeSkills: empSkill } },
-        { $project: { EmployeeName: 1, _id: 0 } },
-        { $sort: { EmployeeName: 1 } },
+        { $match: { Skills: empSkill } },
+        { $project: { Name: 1, _id: 0 } },
+        { $sort: { Name: 1 } },
       ]);
 
     const count = await this.employeeModel.countDocuments({
-      EmployeeSkills: empSkill,
+      Skills: empSkill,
     });
     const data: GetMatchedEmployeeSkillsResponse = {
       count,
@@ -220,10 +220,10 @@ export class EmployeeService {
       'In the service: EmployeeService.name \t method: getEmployeesOfSkill.name',
     );
     const employeesOfSkill = await this.employeeModel
-      .find({ EmployeeSkills: skill })
+      .find({ Skills: skill })
       .exec();
     const count = await this.employeeModel.countDocuments({
-      EmployeeSkills: skill,
+      Skills: skill,
     });
     const employeesOutput: any[] = [];
 
