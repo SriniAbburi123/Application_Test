@@ -34,16 +34,16 @@ export class ReportsController {
 
   @Get('skill-popularity')
   @ApiOperation({
-    summary: 'Get all Employees of matching skill',
+    summary: 'Get count of employees of all skills',
   })
   @ApiResponse({
     status: 200,
-    description: 'Employees fetched successfully',
+    description: 'Data fetched successfully from DB',
     type: GetAllSkillsResponse,
   })
   @ApiResponse({
     status: 400,
-    description: 'Employees not found',
+    description: 'Error in fetching the data from DB',
   })
   async getAllSkilledEmployees(@Res() response) {
     this.logger.debug(
