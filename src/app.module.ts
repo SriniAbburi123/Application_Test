@@ -16,6 +16,7 @@ import { EmployeeAnalyticsModule } from './modules/employeeAnalytics/employeeAna
 import { SkillModule } from './modules/skill/skill.module';
 import { LoggerMiddleware } from './utils/loggerModule/logger.middleware';
 import { HealthModule } from './health/health.module';
+import { ReportsModule } from './modules/reports/reports.module';
 
 function getKey(key: string): Buffer {
   return crypto.createHash('sha256').update(key).digest();
@@ -66,6 +67,8 @@ function decrypt(text: string): string {
     }),
     
     HealthModule,
+    
+    ReportsModule,
   ],
 
   providers: [

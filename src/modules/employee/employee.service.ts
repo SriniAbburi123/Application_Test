@@ -83,28 +83,26 @@ export class EmployeeService {
 
   // Get All skilled employees from DB using pipeline.
   async getAllSkilledEmployees(): Promise<
-    GetMatchedEmployeeAllSkillsResponse[]
-  > {
+    GetMatchedEmployeeAllSkillsResponse[]> {
     this.logger.debug(
       'In the service: EmployeeService.name \t method: getAllSkilledEmployees.name',
     );
     const employeeData: GetMatchedEmployeeAllSkillsResponse[] =
       await this.employeeModel.aggregate([
-        { $unwind: { path: '$EmployeeSkills' } },
+        { $unwind: { path: '$Skills' } },
         {
           $group: {
-            _id: '$EmployeeSkills',
+            _id: '$Skills',
             Employees: {
               $push: {
-                empId: '$EmployeeId',
-                empName: '$EmployeeName',
+                empName: '$Name',
               },
             },
           },
         },
         // { $project: { EmpSkill: "$_id", Employees: 1 } },
         { $project: { Employees: 1 } },
-        { $set: { EmpSkill: '$_id' } },
+        { $set: { Skill: '$_id' } },
         { $unset: '_id' },
         { $sort: { EmployeeId: 1 } },
       ]);
